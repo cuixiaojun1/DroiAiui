@@ -16,6 +16,11 @@
 
 # Gradle files
 .gradle/
+.gradle/5.1.1/
+.gradle/buildOutputCleanup/
+.gradle/5.1.1/javaCompile/javaCompile.lock
+.gradle/buildOutputCleanup/cache.properties
+.gradle/buildOutputCleanup/outputFiles.bin
 build/
 */build/
 gradlew
