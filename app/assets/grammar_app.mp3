@@ -1,0 +1,49 @@
+#BNF+IAT 1.0 UTF-8;
+!grammar app;
+!slot <appName>;
+!slot <appCmd>;
+!slot <appPre>;
+!slot <setSpeech>;
+!slot <pthDefault>;
+!slot <pthWomen>;
+!slot <pthGirl>;
+!slot <pthMan>;
+!slot <pthDongbei>;
+!slot <pthHenan>;
+!slot <pthHunan>;
+!slot <pthSichuan>;
+!slot <pthTaiwan>;
+!slot <pthYueyu>;
+!slot <speech>;
+!slot <use>;
+
+!start <appStart>;
+<appStart>:<appAction1>|<appAction2>|<speechAction1>|<speechAction2>;
+
+/* 应用操作命令1: 打开微信*/
+<appAction1>:<appCmd><appName>;
+/* 应用操作命令2: 我想打开微信 */
+<appAction2>:<appPre><appCmd><appName>;
+
+/* 方言操作命令1: 用四川话播报 */
+<speechAction1>:[<appPre>]<use>[<pthDefault>][<pthWomen>][<pthGirl>][<pthMan>][<pthDongbei>][<pthHenan>][<pthHunan>][<pthSichuan>][<pthTaiwan>][<pthYueyu>]<speech>;
+/* 方言操作命令2: 切换为四川方言播报*/
+<speechAction2>:[<appPre>]<setSpeech>[<pthDefault>][<pthWomen>][<pthGirl>][<pthMan>][<pthDongbei>][<pthHenan>][<pthHunan>][<pthSichuan>][<pthTaiwan>][<pthYueyu>][<speech>];
+
+/* 词典槽定义 */
+<appName>:微信;
+<appPre>:我|我要|我想|我想要|帮忙|请帮忙;
+<use>:用|使用;
+<appCmd>:打开|进入|查看;
+<setSpeech>:切换|切换为|切换成|改成|改变为|改变|转换|转换为;
+<speech>:播报|播放|播报声音|播放声音|回答|回答我|回复我|回复|跟我对话|和我聊天|跟我聊天;
+<pthDefault>:标准普通话|普通话声音|默认的普通话|默认普通话|普通话;
+<pthWomen>:女生普通话|普通话女声|女人普通话|普通话女人;
+<pthGirl>:女童普通话|普通话女童|小女孩的声音|小女孩的普通话|小孩的声音|小女孩声音|小孩声音|小女孩普通话;
+<pthMan>:男生普通话|男人普通话|大人普通话|大人的普通话|男生的普通话|男人的普通话;
+<pthDongbei>:东北话|东北普通话|东北方言|东北的方言;
+<pthHenan>:河南话|河南的方言|河南的普通话|河南方言;
+<pthHunan>:湖南话|湖南的方言|湖南方言|湖南的普通话;
+<pthSichuan>:四川话|四川的方言|四川方言|四川的普通话;
+<pthTaiwan>:台湾话|台湾的方言|台湾的普通话|台湾方言;
+<pthYueyu>:粤语|粤语的方言|粤语方言;

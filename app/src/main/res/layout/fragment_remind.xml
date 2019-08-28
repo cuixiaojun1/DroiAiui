@@ -1,0 +1,122 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.cappu.aiui.ui.RemindFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/all_reminds"
+        android:layout_margin="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/all_reminds"
+        android:padding="5dp"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#ffffff"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:visibility="visible"
+        tools:ignore="HardcodedText" />
+
+    <LinearLayout
+        android:id="@+id/linear_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/all_reminds"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/message_point_remind"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/no_reminds"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:text="@string/no_reminds"
+                android:textColor="#ffffff"
+                android:textSize="24sp"
+                android:visibility="visible"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/remind_message_point_string"
+                android:textColor="#ffffff"
+                android:gravity="center_horizontal"
+                android:textSize="19sp"
+                android:visibility="visible"
+                android:lineSpacingExtra="10dp"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/single_reminder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/single_reminder"
+                    android:textColor="#ffffff"
+                    android:textSize="22sp"
+                    android:layout_marginLeft="10dp"
+                    android:visibility="gone"/>
+                <com.cappu.aiui.ui.RemindListView
+                    android:id="@+id/single_listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="#00000000"
+                    android:dividerHeight="18dp"
+                    android:listSelector="#00000000"
+                    android:scrollbars="none"
+                    android:visibility="gone">
+                </com.cappu.aiui.ui.RemindListView>
+                <TextView
+                    android:id="@+id/repeat_reminder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:text="@string/repeat_reminder"
+                    android:gravity="center_vertical"
+                    android:textColor="#ffffff"
+                    android:textSize="22sp"
+                    android:layout_marginLeft="10dp"
+                    android:visibility="gone"/>
+                <com.cappu.aiui.ui.RemindListView
+                    android:id="@+id/repeat_listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="#00000000"
+                    android:dividerHeight="18dp"
+                    android:listSelector="#00000000"
+                    android:scrollbars="none"
+                    android:visibility="gone">
+                </com.cappu.aiui.ui.RemindListView>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+</RelativeLayout>

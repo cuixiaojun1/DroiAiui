@@ -1,0 +1,22 @@
+﻿#BNF+IAT 1.0;
+!grammar contact;
+!slot <ba>;
+!slot <contact>;
+!slot <numberto>;
+!slot <want>;
+!slot <teletype>;
+!slot <find>;
+!slot <contact>;
+!slot <contact2>;
+!start <contactstart>;
+<contactstart>: [<want>](<ba><contact><numberto><contact>|<find>(<contact>[<teletype>]|<contact2>));
+
+<find>:查|查找|查看|看|看一下|查一下|查找一下|查看一下|我要|我想要|告诉我;
+<teletype>:的电话|的号码|的联系方式|的电话号码;
+
+<want>:我想|我要|请|帮我|我想要|请帮我;
+
+<ba>:把;
+<numberto>:的号码发给!id(10003)|的电话发给!id(10003)|的手机号码发给!id(10003)|的手机发给!id(10003)|的联系方式发给!id(10003);
+<contact2>:已拨电话|电话号码;
+<contact>:连长;

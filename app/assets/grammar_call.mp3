@@ -1,0 +1,50 @@
+#BNF+IAT 1.0 UTF-8;
+/* 语法名称 */
+!grammar call;
+/* 语义槽 */
+!slot <contact>;
+!slot <callPre>;
+!slot <callCmd>;
+!slot <callPhone>;
+!slot <callTo>;
+!slot <phoneType>;
+!slot <number>;
+
+!start <callAction>;
+
+<callAction>:<callAction1>|<callAction2>|<callAction3>|<callAction4>|<callAction5>|<callAction6>|<callAction7>|<callAction8>|<callAction9>|<callAction10>|<callAction11>|<callAction12>;
+<callNumber>:[<number>][<number>][<number>][<number>][<number>][<number>][<number>][<number>][<number>][<number>][<number>];
+
+/* 电话操作命令1： 我想打电话给连长*/
+<callAction1>:<callPre><callCmd><callTo><contact>;
+/* 电话操作命令2： 打电话给连长*/
+<callAction2>:<callCmd><callTo><contact>|<callTo><contact><callCmd>;
+/* 电话操作命令3： 我想打电话给连长的中国移动号码*/
+<callAction3>:<callPre><callCmd><callTo><contact><phoneType>;
+/* 电话操作命令4： 打电话给连长的中国移动号码*/
+<callAction4>:<callCmd><callTo><contact><phoneType>;
+/* 电话操作命令5： 我想打电话*/
+<callAction5>:<callPre><callCmd>;
+/* 电话操作命令6： 我想打电话给连长的手机号码*/
+<callAction6>:<callPre><callCmd><callTo><contact><callPhone>;
+/* 电话操作命令7： 打电话给连长的手机号码*/
+<callAction7>:<callCmd><callTo><contact><callPhone>;
+/* 电话操作命令8： 呼叫连长*/
+<callAction8>:<callCmd><contact>;
+/* 电话操作命令9： 我想呼叫153764207482*/
+<callAction9>:<callPre><callCmd><callNumber>;
+/* 电话操作命令10： 呼叫153764207482*/
+<callAction10>:<callCmd><callNumber>;
+/* 电话操作命令11： 打电话给153764207482 */
+<callAction11>:<callCmd><callTo><callNumber>;
+/* 电话操作命令12： 给10086打电话*/
+<callAction12>:<callTo><callNumber><callCmd>;
+
+/* 词典槽定义 */
+<contact>:连长;
+<callPre>:我|我要|我想|我想要;
+<callCmd>:打电话|拨号|拨打|拨|打|呼叫|电话;
+<callPhone>:电话|手机|号码|电话号码|手机号|手机号码|的手机号码|的手机|的电话|的号码|的手机号|的电话号码;
+<callTo>:给;
+<phoneType>:中国移动|的中国移动|的移动|中国电信|的中国电信|的电信|中国联通|的中国联通|的联通;
+<number>: 0|1|2|3|4|5|6|7|8|9;

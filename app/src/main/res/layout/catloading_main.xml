@@ -1,0 +1,72 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="150dp"
+    android:layout_height="150dp"
+    android:background="@drawable/recognizing_dialog_background"
+    tools:context=".ui.CappuAiuiActivity">
+
+    <ImageView
+        android:layout_centerInParent="true"
+        android:src="@mipmap/mouse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/mouse"/>
+
+    <RelativeLayout
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout">
+
+        <ImageView
+            android:layout_centerInParent="true"
+            android:src="@mipmap/cat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cat"/>
+
+        <ImageView
+            android:layout_marginLeft="3.5dp"
+            android:layout_marginTop="8.5dp"
+            android:src="@mipmap/eyes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/eye_left"/>
+
+        <com.cappu.aiui.ui.EyelidView
+            android:id="@+id/eyelid_left"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="3.5dp"
+            android:layout_marginTop="7.5dp"
+            android:src="@mipmap/eyes" />
+
+        <ImageView
+            android:layout_marginLeft="23dp"
+            android:layout_marginTop="8.5dp"
+            android:src="@mipmap/eyes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/eye_right"/>
+
+        <com.cappu.aiui.ui.EyelidView
+            android:id="@+id/eyelid_right"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="21dp"
+            android:layout_marginTop="7.5dp"
+            android:src="@mipmap/eyes" />
+    </RelativeLayout>
+
+    <com.cappu.aiui.ui.GraduallyTextView
+        android:id="@+id/graduallyTextView"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/relativeLayout"
+        android:layout_centerHorizontal="true"
+        android:text="@string/is_loading"
+        android:textColor="#ffffff"
+        android:textSize="20sp" />
+
+</RelativeLayout>

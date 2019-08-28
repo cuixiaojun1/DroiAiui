@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/cappu_voice_background5">
+
+    <Button
+        android:id="@+id/cappu_back_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="right|center_vertical"
+        android:paddingRight="15dp"
+        android:text="@string/back"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
+
+    <TextView
+        android:id="@+id/cappu_help_txt1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="13dp"
+        android:text="@string/all_remind"
+        android:textColor="#ffffff"
+        android:textSize="30sp"
+        tools:ignore="HardcodedText" />
+
+</RelativeLayout>

@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     buildToolsVersion "29.0.1"
     defaultConfig {
-        applicationId "com.droi.droiaiui"
+        applicationId "com.droi.aiui"
         minSdkVersion 28
         targetSdkVersion 28
         versionCode 1

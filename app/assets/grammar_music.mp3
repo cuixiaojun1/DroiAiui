@@ -1,0 +1,33 @@
+#BNF+IAT 1.0 UTF-8;
+!grammar music;
+
+!slot <playMusic>;
+!slot <singerName>;
+!slot <songName>;
+!slot <musicPre>;
+!slot <musicType>;
+!slot <musicOf>;
+!slot <music>;
+
+!start <musicStart>;
+<musicStart>:<musicAction1>|<musicAction2>|<musicAction3>|<musicAction4>|<musicAction5>;
+
+/* 音乐操作1 我要听首歌 */
+<musicAction1>:[<musicPre>]<playMusic><music>;
+/* 音乐操作2 我要听老歌 */
+<musicAction2>:[<musicPre>]<playMusic><musicType>[<music>];
+/* 音乐操作3 我要听忘情水 */
+<musicAction3>:[<musicPre>]<playMusic><songName>;
+/* 音乐操作4 我要听连长的歌 */
+<musicAction4>:[<musicPre>]<playMusic><singerName><musicOf><music>;
+/* 音乐操作5 我要听连长的忘情水 */
+<musicAction5>:[<musicPre>]<playMusic><singerName><musicOf><songName>;
+
+/* 词典槽定义 */
+<musicPre>:我想|我要|小布我想|小布我要|给我|小布给我|小布;
+<playMusic>:播放|点播|听|听歌|听首歌|听首|来一首|来首|播;
+<singerName>:连长;
+<songName>:忘情水;
+<musicOf>:的;
+<music>:歌|歌曲|音乐;
+<musicType>:广场舞|老歌|评书|红歌|戏曲|沪剧|纯音乐|儿歌|黄梅戏|昆曲|秦腔|睡前故事;

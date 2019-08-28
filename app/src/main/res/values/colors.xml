@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="titlebar">#1E90FF</color>
+    <color name="background_white_80">#CCffffff</color>
+    <color name="background_white_75">#BFffffff</color>
+    <color name="background_white_70">#B3ffffff</color>
+    <color name="background_white_60">#99ffffff</color>
+    <color name="background_black_10">#1A000000</color>
+    <color name="background_black_30">#4D000000</color>
+    <color name="background_black_60">#99000000</color>
+    <color name="background_black_5">#0D000000</color>
+    <color name="background_gray">#666666</color>
+
+    <color name="remind_detail_title_background_color">#fafafa</color>
+    <color name="remind_detail_content_background_color">#f2f2f2</color>
+    <color name="remind_detail_delete_text_color">#FF4081</color>
+    <color name="remind_detail_info_text_color">#333333</color>
 </resources>

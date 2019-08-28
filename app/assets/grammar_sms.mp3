@@ -1,0 +1,43 @@
+#BNF+IAT 1.0 UTF-8;
+!grammar sms;
+!slot <contact>;
+!slot <smsPre>;
+!slot <smsCmd>;
+!slot <smsTo>;
+!slot <number>;
+
+!start <smsAction>;
+<smsAction>: <smsAction1>|<smsAction2>|<smsAction3>|<smsAction4>|<smsAction5>|<smsAction6>|<smsAction7>|<smsAction8>|<smsAction9>|<smsAction10>;
+<smsNumber>:[<number>][<number>][<number>][<number>][<number>][<number>][<number>][<number>][<number>][<number>][<number>];
+/* 短信命令1 发信息*/
+<smsAction1>:<smsCmd>;
+/* 短信命令2 我想发信息*/
+<smsAction2>:<smsPre><smsCmd>;
+/* 短信命令3 我想发信息给连长*/
+<smsAction3>:<smsPre><smsCmd><smsTo><contact>;
+/* 短信命令4 我想给连长发信息*/
+<smsAction4>:<smsPre><smsTo><contact><smsCmd>;
+/* 短信命令5 发信息给连长*/
+<smsAction5>:<smsCmd><smsTo><contact>;
+/* 短信命令6 给连长发信息*/
+<smsAction6>:<smsTo><contact><smsCmd>;
+/* 短信命令7 给10086发信息*/
+<smsAction7>:<smsTo><smsNumber><smsCmd>;
+/* 短信命令8 发信息给10086*/
+<smsAction8>:<smsCmd><smsTo><smsNumber>;
+/* 短信命令9 我想给10086发信息*/
+<smsAction9>:<smsPre><smsTo><smsNumber><smsCmd>;
+/* 短信命令10 我想发信息给10086*/
+<smsAction10>:<smsPre><smsCmd><smsTo><smsNumber>;
+
+
+/* 词典槽定义 */
+<contact>:连长;
+<smsPre>:我要|帮我|请|我想|我想要|请帮我;
+<smsCmd>:发短信息|发短信|发短消息|发信息|发消息|短消息|短信|信息|消息|短信息
+         |发一条短消息|发一条短信|发一条信息|发一条消息|发一条短信息
+         |发送短消息|发送短信|发送短信息|发送信息|发送消息
+         |编短信|编短信息|编消息|编信息|编短消息
+         |编辑短信|编辑信息|编辑消息|编辑短消息|编辑短信息;
+<smsTo>: 给|向;
+<number>: 0|1|2|3|4|5|6|7|8|9;

@@ -1,0 +1,56 @@
+#BNF+IAT 1.0 UTF-8;
+!grammar setting;
+
+!slot <setPre>;
+!slot <cmdIncrease>;
+!slot <cmdReduce>;
+!slot <cmdOpen>;
+!slot <cmdClose>;
+!slot <takePhoto>;
+!slot <viewPhoto>;
+!slot <typeWifi>;
+!slot <typeData>;
+!slot <typeBT>;
+!slot <typeGPS>;
+!slot <typeVolume>;
+!slot <typeLight>;
+!slot <typeFont>;
+!slot <typeTorch>;
+
+!start <settingsStart>;
+<settingsStart>:<setBrightness>|<setFont>|<setVolume>|<setTorch>|<setWifi>|<setBT>|<setData>|<setGPS>|[<setPre>]<takePhoto>|[<setPre>]<viewPhoto>;
+
+/* 设置屏幕亮度 */
+<setBrightness>:[<setPre>]<cmdIncrease><typeLight>|[<setPre>]<cmdReduce><typeLight>;
+/* 设置字体大小 */
+<setFont>:[<setPre>]<cmdIncrease><typeFont>|[<setPre>]<cmdReduce><typeFont>;
+/* 设置音量大小 */
+<setVolume>:[<setPre>]<cmdIncrease><typeVolume>|[<setPre>]<cmdReduce><typeVolume>;
+/* 打开关闭手电筒 */
+<setTorch>:[<setPre>]<cmdOpen><typeTorch>|[<setPre>]<cmdClose><typeTorch>;
+/* 打开关闭WIFI */
+<setWifi>:[<setPre>]<cmdOpen><typeWifi>|[<setPre>]<cmdClose><typeWifi>;
+/* 打开关闭蓝牙 */
+<setBT>:[<setPre>]<cmdOpen><typeBT>|[<setPre>]<cmdClose><typeBT>;
+/* 打开关闭数据连接 */
+<setData>:[<setPre>]<cmdOpen><typeData>|[<setPre>]<cmdClose><typeData>;
+/* 打开关闭GPS */
+<setGPS>:[<setPre>]<cmdOpen><typeGPS>|[<setPre>]<cmdClose><typeGPS>;
+
+
+/* 词典槽定义 */
+<setPre>:我想|请|请帮忙|我要|给我|请给我|帮忙;
+<cmdIncrease>:增大|增加|变大|调高|调亮|调大|增大一点|增加一点|调高一点|调亮一点|变大一点;
+<cmdReduce>:降低|减小|减少|变小|调暗|调低|变暗|缩小|调小|调小点|调小一点|变小一点|变小点|降低点|调小点儿|降低点儿|调暗点|调暗点儿;
+<cmdOpen>:打开;
+<cmdClose>:关闭;
+<takePhoto>:拍照|拍照片|照相|拍一张照片|拍张照片|拍一张相片|拍相片|自拍|拍张照;
+<viewPhoto>:查看照片|查看图片|浏览照片|浏览图片|查看图库|查看相册|浏览相册|查看相片|浏览相片;
+<typeWifi>:wifi|Wifi|WIfi|WIFI|无线|无线网络|无线连接|无线上网;
+<typeData>:数据连接|流量|流量上网|数据|数据上网;
+<typeBT>:蓝牙|BLUETOOTH|Bluetooth|bluetooth|蓝牙连接;
+<typeGPS>:GPS|gps|Gps|定位|位置信息|位置;
+<typeVolume>:音量|声音|系统音量|系统声音|铃声|手机铃声|系统铃声|手机的铃声|系统的铃声|手机的音量|系统的音量;
+<typeLight>:亮度|屏幕亮度|手机屏幕亮度|手机亮度;
+<typeFont>:字体|字体大小|手机字体大小|系统字体|系统字体大小|手机字体|手机字体大小;
+<typeTorch>:手电筒|手电;
