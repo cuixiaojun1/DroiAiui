@@ -7,6 +7,10 @@ import android.hardware.camera2.CameraManager;
 import android.os.RemoteException;
 import android.text.TextUtils;
 
+import com.droi.aiui.bean.SettingBean;
+import com.droi.aiui.util.FunctionUtil;
+import com.droi.aiui.util.JsonParserUtil;
+
 import java.util.List;
 
 
@@ -31,29 +35,27 @@ public class SettingParseAdapter extends BaseParseAdapter {
         settingBean = JsonParserUtil.parseJsonObject(json, SettingBean.class);
         String operationType = getType("operation");
         String settingType = getType("type");
-        CappuLog.d(TAG, "[SettingParseAdapter][getSemanticResultText]operationType = " + operationType + ",settingType = " + settingType);
         return handleSettingType(settingType, operationType);
     }
 
     private String handleSettingType(String settingType, String operationType) {
-        CappuLog.d(TAG, "[SettingParseAdapter][handleSettingType]settingType = " + settingType + ",operationType = " + operationType);
         if (settingType != null) {
             switch (settingType) {
-                case "�ֵ�Ͳ":
+                case "手电筒":
                     return handleTorchSkill(settingType, operationType);
-                case "����":
+                case "蓝牙":
                     return handleBluetoothSkill(settingType, operationType);
-                case "����":
+                case "流量":
                     return handleGPRSSkill(settingType, operationType);
-                case "����":
+                case "无线":
                     return handleWIFISkill(settingType, operationType);
-                case "��λ":
+                case "定位":
                     return handleGPSSkill(settingType, operationType);
-                case "����":
+                case "字体":
                     return handleFontSkill(settingType, operationType);
-                case "����":
+                case "亮度":
                     return handleBrightnessSkill(settingType, operationType);
-                case "����":
+                case "音量":
                     return handleVolumeSkill(settingType, operationType);
                 default:
                     return null;
@@ -69,11 +71,9 @@ public class SettingParseAdapter extends BaseParseAdapter {
      * @return
      */
     private String handleTorchSkill(String settingType, String operationType) {
-        CappuLog.d("cuixiaojun", "[SettingParseAdapter][handleTorchSkill]settingType = " + settingType + ",operationType = " + operationType
-                                            +",isHasFlashLight = "+FunctionUtil.isHasFlashLight(mCameraManager)+",getTorchState = "+FunctionUtil.getTorchState(mContext));
         if (operationType != null) {
             switch (operationType) {
-                case "�ر�":
+                case "关闭":
                     if (FunctionUtil.isHasFlashLight(mCameraManager)) {
                         if (FunctionUtil.getTorchState(mContext) == 0) {
                             if(FunctionUtil.handelFlashLight(mContext,mCameraManager,false)){
@@ -87,7 +87,7 @@ public class SettingParseAdapter extends BaseParseAdapter {
                     } else {
                         return "�Բ���δ�������ֻ��м�⵽��ص��豸��";
                     }
-                case "��":
+                case "打开":
                     if (FunctionUtil.isHasFlashLight(mCameraManager)) {
                         if (FunctionUtil.getTorchState(mContext) == 1) {
                             if(FunctionUtil.handelFlashLight(mContext,mCameraManager,true)){
@@ -101,8 +101,8 @@ public class SettingParseAdapter extends BaseParseAdapter {
                     } else {
                         return "�Բ���δ�������ֻ��м�⵽��ص��豸��";
                     }
-                case "����":
-                case "��С":
+                case "增大":
+                case "减小":
                     return "�Բ����Ҳ��Ǻ�������˵����˼���뻻��˵�����ԣ�";
                 default:
                     return null;
@@ -118,10 +118,9 @@ public class SettingParseAdapter extends BaseParseAdapter {
      * @return
      */
     private String handleBluetoothSkill(String settingType, String operationType) {
-        CappuLog.d(TAG, "[SettingParseAdapter][handleBluetoothSkill]settingType = " + settingType + ",operationType = " + operationType);
         if (operationType != null) {
             switch (operationType) {
-                case "�ر�":
+                case "关闭":
                     if (FunctionUtil.isBluetoothEnabled()) {
                         if (FunctionUtil.setBluetoothEnabled(false)) {
                             return "����Ϊ���ر�" + settingType + "��";
@@ -131,7 +130,7 @@ public class SettingParseAdapter extends BaseParseAdapter {
                     } else {
                         return "��ǰ"+settingType+"�ѹرգ�";
                     }
-                case "��":
+                case "打开":
                     if (FunctionUtil.isBluetoothEnabled()) {
                         return "��ǰ"+settingType+"�Ѵ򿪣�";
                     } else {
@@ -141,8 +140,8 @@ public class SettingParseAdapter extends BaseParseAdapter {
                             return "��"+settingType+"ʧ��,�����³��ԣ�";
                         }
                     }
-                case "����":
-                case "��С":
+                case "增大":
+                case "减小":
                     return "�Բ����Ҳ��Ǻ�������˵����˼���뻻��˵�����ԣ�";
                 default:
                     return null;
@@ -158,10 +157,9 @@ public class SettingParseAdapter extends BaseParseAdapter {
      * @return
      */
     private String handleGPRSSkill(String settingType, String operationType) {
-        CappuLog.d(TAG, "[SettingParseAdapter][handleGPRSSkill]settingType = " + settingType + ",operationType = " + operationType);
         if (operationType != null) {
             switch (operationType) {
-                case "�ر�":
+                case "关闭":
                     if (FunctionUtil.hasSimCard(mContext)) {
                         if (FunctionUtil.getDataEnabled(mContext)) {
                             FunctionUtil.setDataEnabled(mContext, false);
@@ -172,7 +170,7 @@ public class SettingParseAdapter extends BaseParseAdapter {
                     } else {
                         return "��ǰδ��⵽SIM������ȷ���Ƿ���ȷ������SIM����";
                     }
-                case "��":
+                case "打开":
                     if (FunctionUtil.hasSimCard(mContext)) {
                         if(FunctionUtil.getDataEnabled(mContext)){
                             return "��ǰ"+settingType+"�Ѿ��򿪣�";
@@ -183,8 +181,8 @@ public class SettingParseAdapter extends BaseParseAdapter {
                     } else {
                         return "��ǰδ��⵽SIM������ȷ���Ƿ���ȷ������SIM����";
                     }
-                case "����":
-                case "��С":
+                case "增大":
+                case "减小":
                     return "�Բ����Ҳ��Ǻ�������˵����˼���뻻��˵�����ԣ�";
                 default:
                     return null;
@@ -200,10 +198,9 @@ public class SettingParseAdapter extends BaseParseAdapter {
      * @return
      */
     private String handleWIFISkill(String settingType, String operationType) {
-        CappuLog.d(TAG, "[SettingParseAdapter][handleWIFISkill]settingType = " + settingType + ",operationType = " + operationType);
         if (operationType != null) {
             switch (operationType) {
-                case "�ر�":
+                case "关闭":
                     if(FunctionUtil.isWifiEnabled(mContext)){
                         if(FunctionUtil.setWifiEnable(mContext,false)){
                             return "����Ϊ���ر�"+settingType+"!";
@@ -213,7 +210,7 @@ public class SettingParseAdapter extends BaseParseAdapter {
                     }else{
                         return "��ǰ"+settingType+"�Ѿ��رգ�";
                     }
-                case "��":
+                case "打开":
                     if(FunctionUtil.isWifiEnabled(mContext)){
                         return "��ǰ"+settingType+"�Ѿ��򿪣�";
                     }else{
@@ -223,8 +220,8 @@ public class SettingParseAdapter extends BaseParseAdapter {
                             return "��"+settingType+"ʧ��,�����³��ԣ�";
                         }
                     }
-                case "����":
-                case "��С":
+                case "增大":
+                case "减小":
                     return "�Բ����Ҳ��Ǻ�������˵����˼���뻻��˵�����ԣ�";
                 default:
                     return null;
@@ -240,10 +237,9 @@ public class SettingParseAdapter extends BaseParseAdapter {
      * @return
      */
     private String handleGPSSkill(String settingType, String operationType) {
-        CappuLog.d(TAG, "[SettingParseAdapter][handleGPSSkill]settingType = " + settingType + ",operationType = " + operationType);
         if (operationType != null) {
             switch (operationType) {
-                case "�ر�":
+                case "关闭":
                     if(FunctionUtil.isLocationEnabled(mContext)){
                         if(FunctionUtil.setLocationEnabled(mContext,false)){
                             return "����Ϊ���ر�"+settingType+"!";
@@ -253,7 +249,7 @@ public class SettingParseAdapter extends BaseParseAdapter {
                     }else{
                         return "��ǰ"+settingType+"�Ѿ��رգ�";
                     }
-                case "��":
+                case "打开":
                     if(FunctionUtil.isLocationEnabled(mContext)){
                         return "��ǰ"+settingType+"�Ѿ��򿪣�";
                     }else{
@@ -263,8 +259,8 @@ public class SettingParseAdapter extends BaseParseAdapter {
                             return "��"+settingType+"ʧ�ܣ������³��ԣ�";
                         }
                     }
-                case "����":
-                case "��С":
+                case "增大":
+                case "减小":
                     return "�Բ����Ҳ��Ǻ�������˵����˼���뻻��˵�����ԣ�";
                 default:
                     return null;
@@ -280,9 +276,7 @@ public class SettingParseAdapter extends BaseParseAdapter {
      * @return
      */
     private String handleFontSkill(String settingType, String operationType) {
-        CappuLog.d(TAG, "[SettingParseAdapter][handleFontSkill]settingType = " + settingType + ",operationType = " + operationType);
         float newFontSize = mContext.getResources().getConfiguration().fontScale;
-        CappuLog.d(TAG,"[SettingParseAdapter][handleFontSkill]newFontSize = "+newFontSize);
         if(newFontSize == 1.01f){
             newFontSize = 1.0f;
         }
@@ -293,10 +287,10 @@ public class SettingParseAdapter extends BaseParseAdapter {
         float biggest_fontSize = 1.3f;
         if (operationType != null) {
             switch (operationType) {
-                case "�ر�":
-                case "��":
+                case "关闭":
+                case "打开":
                     return "�Բ����Ҳ��Ǻ�������˵����˼���뻻��˵�����ԣ�";
-                case "����":
+                case "增大":
                     if (newFontSize == small_fontSize) {
                         configuration.fontScale = default_fontSize;
                         try {
@@ -329,7 +323,7 @@ public class SettingParseAdapter extends BaseParseAdapter {
                     } else{
                         return "δʶ��ǰ�����С��";
                     }
-                case "��С":
+                case "减小":
                     if (newFontSize == small_fontSize) {
                         return "��ǰ�����Ѿ�Ϊ��С���壡";
                     } else if (newFontSize == default_fontSize) {
@@ -376,20 +370,19 @@ public class SettingParseAdapter extends BaseParseAdapter {
      * @return
      */
     private String handleBrightnessSkill(String settingType, String operationType) {
-        CappuLog.d(TAG, "[SettingParseAdapter][handleBrightnessSkill]settingType = " + settingType + ",operationType = " + operationType);
         if (operationType != null) {
             switch (operationType) {
-                case "�ر�":
-                case "��":
+                case "关闭":
+                case "打开":
                     return "�Բ����Ҳ��Ǻ�������˵����˼���뻻��˵�����ԣ�";
-                case "����":
+                case "增大":
                     if(FunctionUtil.getBrightness(mContext) >= 255){
                         return "��ǰ��Ļ�����Ѿ�����������";
                     }else{
                         FunctionUtil.upBrightness(mContext);
                         return "�Ѿ�Ϊ��������Ļ���ȣ�";
                     }
-                case "��С":
+                case "减小":
                     if(FunctionUtil.getBrightness(mContext) <= 0){
                         return "��ǰ��Ļ�����Ѿ���Ϊ���";
                     }else{
@@ -410,20 +403,19 @@ public class SettingParseAdapter extends BaseParseAdapter {
      * @return
      */
     private String handleVolumeSkill(String settingType, String operationType) {
-        CappuLog.d(TAG, "[SettingParseAdapter][handleVolumeSkill]settingType = " + settingType + ",operationType = " + operationType);
         if (operationType != null) {
             switch (operationType) {
-                case "�ر�":
-                case "��":
+                case "关闭":
+                case "打开":
                     return "�Բ����Ҳ��Ǻ�������˵����˼���뻻��˵�����ԣ�";
-                case "����":
+                case "增大":
                     if(FunctionUtil.getVolume(mContext) >= 15){
                         return "��ǰ�����Ѿ���Ϊ���";
                     }else{
                         FunctionUtil.upVoice(mContext);
                         return "�Ѿ�Ϊ������������";
                     }
-                case "��С":
+                case "减小":
                     if(FunctionUtil.getVolume(mContext) <= 0){
                         return "��ǰ�����Ѿ���Ϊ��С��";
                     }else{

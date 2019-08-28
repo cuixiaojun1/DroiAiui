@@ -12,6 +12,8 @@ import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 
+import com.droi.aiui.R;
+
 
 /**
  * Created by cuixiaojun on 17-12-23.

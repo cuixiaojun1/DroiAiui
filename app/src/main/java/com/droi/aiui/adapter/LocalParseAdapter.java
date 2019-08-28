@@ -36,7 +36,7 @@ public class LocalParseAdapter{
     private List<AppInfo> allApps;
     private List<Song> allSongs;
     private SpeechControler mSpeechControler;
-    private IMediaPlaybackService mMusicService;
+    //private IMediaPlaybackService mMusicService;
     private CameraManager mCameraManager;
 
     public LocalParseAdapter(Context context) {
@@ -64,7 +64,7 @@ public class LocalParseAdapter{
      * @return
      */
     private String handleActions(String json){
-        mMusicService = AiuiManager.getInstance(mContext).getMusicService();
+        //mMusicService = AiuiManager.getInstance(mContext).getMusicService();
         allContacts = mDataControler.loadAllContacts();
         allApps = mDataControler.loadAllApps();
         //��ϵ������
@@ -446,18 +446,18 @@ public class LocalParseAdapter{
      */
     private String playSongByRandom(List<Song> songs){
         Log.d(TAG,"[LocalParseAdapter][playSongByRandom]allSongsSize = "+allSongs.size());
-        String result;
+        String result = null;
         if(songs != null && songs.size() > 0){
             long[] playList = FunctionUtil.getPlayList(songs);
             Random random = new Random();
             int position = random.nextInt(playList.length);
             String name = songs.get(position).getTitle();
-            if(mMusicService != null){
-                FunctionUtil.playMusicByList(mMusicService,playList,position);
+            /*if(mMusicService != null){
+                //FunctionUtil.playMusicByList(mMusicService,playList,position);
                 result = "����Ϊ������"+name;
             }else{
                 result = "���ַ����ʼ��ʧ�ܣ������³��ԣ�";
-            }
+            }*/
         }else{
             result = "�Բ���û���������ֻ�����ҵ������������֮�����ԣ�";
         }
@@ -469,16 +469,16 @@ public class LocalParseAdapter{
      */
     private String playSongByName(String songName){
         Log.d(TAG,"[LocalParseAdapter][playSongByName]songName = "+songName);
-        String result;
+        String result = null;
         String songPath;
         if(allSongs != null && allSongs.size() > 0){
             if(isSongNameExisted(allSongs,songName)){//�жϸ����Ƿ����
-                if(mMusicService != null){
+                /*if(mMusicService != null){
                     result = "����Ϊ������"+songName+"!";
                     playMusicByName(mMusicService,songName);
                 }else{
                     result = "���ַ����ʼ��ʧ�ܣ������³��ԣ�";
-                }
+                }*/
             }else{
                 result = "û���ҵ�����"+songName+"��������������ĸ�����";
             }
@@ -557,7 +557,7 @@ public class LocalParseAdapter{
     /**
      * ���Ÿ���
      */
-    private void playMusicByName(IMediaPlaybackService mMusicService,String songName){
+    /*private void playMusicByName(IMediaPlaybackService mMusicService,String songName){
         Log.d(TAG,"[MusicParseAdapter][playMusicByName]mMusicService = "+mMusicService+",songPath = "+songName);
         long[] playList = FunctionUtil.getPlayList(allSongs);
         long songId = 0;
@@ -573,7 +573,7 @@ public class LocalParseAdapter{
             }
         }
         FunctionUtil.playMusicByList(mMusicService,playList,position);
-    }
+    }*/
 
     /**
      * ͨ���������ֻ�ȡ���иø��ֵĸ���

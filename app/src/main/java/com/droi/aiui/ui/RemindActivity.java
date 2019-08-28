@@ -12,6 +12,19 @@ import android.os.Vibrator;
 import android.view.View;
 import android.widget.TextView;
 
+import com.droi.aiui.AiuiManager;
+import com.droi.aiui.R;
+import com.droi.aiui.bean.RemindDataTime;
+import com.droi.aiui.bean.RemindInfo;
+import com.droi.aiui.controler.SpeechControler;
+import com.droi.aiui.dao.RemindDBHelp;
+import com.droi.aiui.util.AlarmManagerUtil;
+import com.droi.aiui.util.FunctionUtil;
+import com.droi.aiui.util.StatusBarUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by cuixiaojun on 2018/01/13.
  */
@@ -33,7 +46,6 @@ public class RemindActivity extends Activity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cappu_remind_ui);
-        JeffLog.d(TAG,"onCreate");
         StatusBarUtils.fullScreen(this);
         mMediaPlayer = new MediaPlayer();
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -47,12 +59,10 @@ public class RemindActivity extends Activity implements View.OnClickListener{
         reminds_cancel.setOnClickListener(this);
 
         currentRemindInfo = (RemindInfo) getIntent().getBundleExtra(FunctionUtil.KEY_REMINDINFO_DATA).getSerializable(FunctionUtil.KEY_REMINDINFO);
-        CappuLog.d(TAG,"[RemindActivity][onCreate]currentRemindInfo = "+currentRemindInfo);
         if(!allRemindInfos.contains(currentRemindInfo)){
             allRemindInfos.add(currentRemindInfo);
         }
         remindDataTime = FunctionUtil.getRemindDateTime(currentRemindInfo.getTime());
-        CappuLog.d(TAG,"[RemindActivity][onCreate]--->��ǰ���ѣ�"+currentRemindInfo+",remindDataTime = "+ AlarmManagerUtil.printTime(currentRemindInfo.getTime()));
 
         if(remindDataTime != null){
             reminds_date.setText(remindDataTime.getTime());
@@ -66,12 +76,10 @@ public class RemindActivity extends Activity implements View.OnClickListener{
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         currentRemindInfo = (RemindInfo) intent.getBundleExtra(FunctionUtil.KEY_REMINDINFO_DATA).getSerializable(FunctionUtil.KEY_REMINDINFO);
-        CappuLog.d(TAG,"[RemindActivity][onNewIntent]currentRemindInfo = "+currentRemindInfo);
         if(!allRemindInfos.contains(currentRemindInfo)){
             allRemindInfos.add(currentRemindInfo);
         }
         remindDataTime = FunctionUtil.getRemindDateTime(currentRemindInfo.getTime());
-        JeffLog.d(TAG,"onNewIntent--->��ǰ���ѣ�"+currentRemindInfo+",remindDataTime = "+currentRemindInfo);
 
         if(remindDataTime != null){
             reminds_date.setText(remindDataTime.getTime());
@@ -116,7 +124,6 @@ public class RemindActivity extends Activity implements View.OnClickListener{
                         String speech = "���ˣ�����"+reminds_content.getText()+"�ˣ�";
                         mSpeechControler.setSpeechContent(speech);
                         if(!mSpeechControler.isSpeaking()){
-                            JeffLog.d(TAG,"��ʼ������"+speech);
                             mSpeechControler.startSpeechByType("RemindActivity");
                         }
                     }
@@ -151,7 +158,6 @@ public class RemindActivity extends Activity implements View.OnClickListener{
     @Override
     protected void onResume() {
         super.onResume();
-        JeffLog.d(TAG,"onResume");
         mHandler.sendEmptyMessageDelayed(0,2000);
     }
     /**
@@ -189,7 +195,6 @@ public class RemindActivity extends Activity implements View.OnClickListener{
      * ��ʼ��
      */
     private void startVibrator() {
-        JeffLog.d(TAG,"��ʼ��");
         /**
          * �������𶯴�С����ͨ���ı�pattern���趨���������ʱ��̫�̣���Ч�����ܸо�����
          */
@@ -201,7 +206,6 @@ public class RemindActivity extends Activity implements View.OnClickListener{
      * ȡ����
      */
     private void stopVibrator(){
-        JeffLog.d(TAG,"ֹͣ��");
         if(vibrator.hasVibrator()){
             vibrator.cancel();
         }

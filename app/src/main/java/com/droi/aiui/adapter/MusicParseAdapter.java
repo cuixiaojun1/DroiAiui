@@ -39,12 +39,12 @@ public class MusicParseAdapter extends BaseParseAdapter {
     private Context mContext;
     private List<Song> allSongs;
     private MusicBean mMusicBean;
-    private IMediaPlaybackService mMusicService;
+    //private IMediaPlaybackService mMusicService;
 
     public MusicParseAdapter(Context context) {
         mContext = context;
         allSongs = DataControler.getInstance(context).loadAllSongs();
-        mMusicService = AiuiManager.getInstance(context).getMusicService();
+        //mMusicService = AiuiManager.getInstance(context).getMusicService();
     }
 
     @Override
@@ -125,14 +125,14 @@ public class MusicParseAdapter extends BaseParseAdapter {
                     result = playSongByRandom(songs1);
                     break;
                 case PLAY_TYPE_PREV:
-                    result = playSongToNext(false);
+                    //result = playSongToNext(false);
                     break;
                 case PLAY_TYPE_NEXT:
-                    result = playSongToNext(true);
+                    //result = playSongToNext(true);
                     break;
                 case PLAY_TYPE_PAUSE:
                 case PLAY_TYPE_STOP:
-                    result = stopPlaySong();
+                    //result = stopPlaySong();
                     break;
                     default:
                         break;
@@ -146,18 +146,18 @@ public class MusicParseAdapter extends BaseParseAdapter {
      * ���ܰ���ĳ�����͵ĸ�����ȫ��������ĳ���ֵĸ���
      */
     private String playSongByRandom(List<Song> songs){
-        String result;
+        String result = null;
         if(songs != null && songs.size() > 0){
             long[] playList = FunctionUtil.getPlayList(songs);
             Random random = new Random();
             int position = random.nextInt(playList.length);
             String name = songs.get(position).getTitle();
-            if(mMusicService != null){
+            /*if(mMusicService != null){
                 FunctionUtil.playMusicByList(mMusicService,playList,position);
                 result = "����Ϊ������"+name;
             }else{
                 result = "���ַ����ʼ��ʧ�ܣ������³��ԣ�";
-            }
+            }*/
         }else{
             result = "�Բ���û���������ֻ�����ҵ������������֮�����ԣ�";
         }
@@ -168,17 +168,17 @@ public class MusicParseAdapter extends BaseParseAdapter {
      * �������
      */
     private String playSongByName(String songName,String singer){
-        String result;
+        String result = null;
         if(allSongs != null && allSongs.size() > 0){
             if(!TextUtils.isEmpty(singer)){
                 if(isSingerExisted(allSongs,singer)){//�жϸ����Ƿ����
                     if(isSongNameExisted(allSongs,songName)){//�жϸ����Ƿ����
-                        if(mMusicService != null){
+                        /*if(mMusicService != null){
                             result = "����Ϊ������"+singer+"��"+songName+"!";
                             playMusicByName(mMusicService,songName);
                         }else{
                             result = "���ַ����ʼ��ʧ�ܣ������³��ԣ�";
-                        }
+                        }*/
                     }else{
                         result = "û���ҵ�"+singer+"��"+songName+"����������ĸ��ֵĸ�����";
                     }
@@ -187,12 +187,12 @@ public class MusicParseAdapter extends BaseParseAdapter {
                 }
             }else{
                 if(isSongNameExisted(allSongs,songName)){//�жϸ����Ƿ����
-                    if(mMusicService != null){
+                    /*if(mMusicService != null){
                         result = "����Ϊ������"+songName+"!";
                         playMusicByName(mMusicService,songName);
                     }else{
                         result = "���ַ����ʼ��ʧ�ܣ������³��ԣ�";
-                    }
+                    }*/
                 }else{
                     result = "û���ҵ�����"+songName+"��������������ĸ�����";
                 }
@@ -205,7 +205,7 @@ public class MusicParseAdapter extends BaseParseAdapter {
 
     /**
      * ���Ÿ���
-     */
+     *//*
     private void playMusicByName(IMediaPlaybackService mMusicService,String songName){
         long[] playList = FunctionUtil.getPlayList(allSongs);
         long songId = 0;
@@ -221,13 +221,13 @@ public class MusicParseAdapter extends BaseParseAdapter {
             }
         }
         FunctionUtil.playMusicByList(mMusicService,playList,position);
-    }
+    }*/
 
 
     /**
      * �������
      */
-    private String playSongToNext(boolean isNext){
+    /*private String playSongToNext(boolean isNext){
         String result = null;
         if(mMusicService != null) try {
             long[] queue = mMusicService.getQueue();
@@ -285,7 +285,7 @@ public class MusicParseAdapter extends BaseParseAdapter {
             result = "���ַ����ʼ��ʧ�ܣ����Ժ����ԣ�";
         }
         return result;
-    }
+    }*/
 
     /**
      * ͨ������id��ȡ��������
@@ -302,7 +302,7 @@ public class MusicParseAdapter extends BaseParseAdapter {
     /**
      * ��ͣ���Ÿ���
      */
-    private String stopPlaySong(){
+    /*private String stopPlaySong(){
         String result;
         if(mMusicService != null){
             result = "�õģ����Ҿ���ֹͣ�����ˣ������������ʱ���ٸ����Ұɣ�";
@@ -312,7 +312,7 @@ public class MusicParseAdapter extends BaseParseAdapter {
         }
 
         return result;
-    }
+    }*/
 
     /**
      * ͨ���������ͻ�ȡ��ص����и���

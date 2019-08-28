@@ -11,6 +11,26 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.baidu.location.BDAbstractLocationListener;
+import com.baidu.location.BDLocation;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.droi.aiui.AiuiManager;
+import com.droi.aiui.Interface.IOnParseListener;
+import com.droi.aiui.Interface.IOnRemindCancelClickListener;
+import com.droi.aiui.Interface.OnParseResultTextListener;
+import com.droi.aiui.Interface.OnVolumeChangedListener;
+import com.droi.aiui.R;
+import com.droi.aiui.apkupdate.UpdateChecker;
+import com.droi.aiui.bean.Message;
+import com.droi.aiui.controler.SpeechControler;
+import com.droi.aiui.util.FragmentManageImpl;
+import com.droi.aiui.util.FunctionUtil;
+import com.droi.aiui.util.StatusBarUtils;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.commonsdk.UMConfigure;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,7 +39,7 @@ import java.util.List;
  * AIUI������
  */
 
-public class DroiAiuiMainActivity extends Activity implements View.OnTouchListener, View.OnClickListener, FragmentManageImp.IManageFragment, OnParseResultTextListener {
+public class DroiAiuiMainActivity extends Activity implements View.OnTouchListener, View.OnClickListener, FragmentManageImpl.IManageFragment, OnParseResultTextListener {
 
     private final String TAG = "CappuAiuiActivity";
 
@@ -28,7 +48,7 @@ public class DroiAiuiMainActivity extends Activity implements View.OnTouchListen
     /*����ʶ�������*/
     public AiuiManager mAiuiManager;
     /*fragment������*/
-    private FragmentManageImp fragmentManageImp;
+    private FragmentManageImpl fragmentManageImp;
     /*������д�Ի���*/
     private SpeechDialogView mSpeechDialogView;
     /*����ɾ���ص��ӿ�*/
@@ -60,7 +80,7 @@ public class DroiAiuiMainActivity extends Activity implements View.OnTouchListen
         //������Ƶ������Ϊ��ý������
         this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
         /* ��ʼ��fragment������*/
-        fragmentManageImp = new FragmentManageImp(this, this);
+        fragmentManageImp = new FragmentManageImpl(this, this);
 
         /* ��ʼ��AIUI������ */
         mAiuiManager = AiuiManager.getInstance(getApplicationContext());

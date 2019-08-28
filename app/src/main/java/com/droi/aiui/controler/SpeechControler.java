@@ -8,11 +8,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.provider.Settings;
-import android.speech.tts.TextToSpeech;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.droi.aiui.Interface.IOnSynthesizerInitComplete;
+import com.iflytek.business.speech.SpeechIntent;
+import com.iflytek.business.speech.SpeechServiceUtil;
+import com.iflytek.business.speech.SynthesizerListener;
+import com.iflytek.business.speech.TextToSpeech;
 
 public class SpeechControler {
     private static final String TAG = "SpeechControler";

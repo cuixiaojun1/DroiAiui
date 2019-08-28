@@ -4,17 +4,17 @@ package com.droi.aiui.ui;
 import android.app.Fragment;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
-import com.cappu.aiui.R;
-import com.cappu.aiui.adapter.CappuHelpListAdapter;
-import com.cappu.aiui.bean.AnimationState;
-import com.cappu.aiui.bean.CappuHelpListItemData;
-import com.cappu.aiui.controler.SpeechControler;
 
-import java.util.List;
+import com.droi.aiui.R;
+import com.droi.aiui.adapter.CappuHelpListAdapter;
+import com.droi.aiui.bean.AnimationState;
+import com.droi.aiui.bean.CappuHelpListItemData;
+import com.droi.aiui.controler.SpeechControler;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,7 +72,7 @@ public class HelpFragment extends BaseFragment implements CappuHelpListAdapter.I
 
     @Override
     public void initData() {
-        mActivity = (CappuAiuiActivity) getActivity();
+        mActivity = (DroiAiuiMainActivity) getActivity();
         if(mActivity != null  && mActivity.mAiuiManager != null){
             mSpeechControler = mActivity.mAiuiManager.getSpeechControler();
         }

@@ -5,13 +5,25 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.droi.aiui.Interface.IOnRemindCancelClickListener;
+import com.droi.aiui.Interface.IonDialogRemindInfoClickListen;
+import com.droi.aiui.R;
+import com.droi.aiui.adapter.CappuRemindAdapter;
+import com.droi.aiui.apkupdate.DownloadService;
+import com.droi.aiui.bean.RemindInfo;
+import com.droi.aiui.dao.RemindDBHelp;
+import com.droi.aiui.util.AlarmManagerUtil;
+import com.droi.aiui.widget.DialogRemindInfo;
+
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -32,7 +44,7 @@ public class RemindFragment extends BaseFragment implements CappuRemindAdapter.I
     private RemindInfo currentRemindInfo;
     private DialogRemindInfo remindinfoDialig;
     private RemindDBHelp mRemindDBHelp;
-    private CappuAiuiActivity cappuAiuiActivity;
+    private DroiAiuiMainActivity cappuAiuiActivity;
     private SharedPreferences mSharedPreferences;
 
     private Map<String,List<RemindInfo>> singleMap = new HashMap<String, List<RemindInfo>>();
@@ -50,7 +62,7 @@ public class RemindFragment extends BaseFragment implements CappuRemindAdapter.I
 
     @Override
     public void initView() {
-        cappuAiuiActivity = (CappuAiuiActivity) getActivity();
+        cappuAiuiActivity = (DroiAiuiMainActivity) getActivity();
         mSingleListView = (RemindListView) view.findViewById(R.id.single_listview);
         mRepeatListView = (RemindListView) view.findViewById(R.id.repeat_listview);
         mMessage_point_remind = (LinearLayout) view.findViewById(R.id.message_point_remind);
@@ -84,7 +96,6 @@ public class RemindFragment extends BaseFragment implements CappuRemindAdapter.I
         repeatKeys.clear();
         //�����ݿ��ȡ���е���������
         List<RemindInfo> remindInfos = mRemindDBHelp.queryRemindAll();
-        JeffLog.d(TAG,"getData--->remindInfos = "+remindInfos.size());
         if (remindInfos != null && remindInfos.size() > 0) {
             for (int i = 0; i < remindInfos.size(); i++) {
                 //ˢ�����ݵ�ʱ����Ҫɾ���������ӣ����Ҹ����ѵ�ʱ���ڵ�ǰʱ��֮ǰ��
@@ -166,7 +177,6 @@ public class RemindFragment extends BaseFragment implements CappuRemindAdapter.I
     @Override
     public void onItemClickListen(RemindInfo info) {
         currentRemindInfo = info;
-        JeffLog.d(TAG,"onItemClickListen--->remindInfo = "+info.toString());
         if (remindinfoDialig == null) {
             remindinfoDialig = new DialogRemindInfo(getActivity());
             remindinfoDialig.setDialogRemindInfoClickListen(this);
@@ -180,11 +190,9 @@ public class RemindFragment extends BaseFragment implements CappuRemindAdapter.I
      */
     @Override
     public void onRemindInfoDel() {
-        JeffLog.d(TAG,"onRemindInfoDel");
         //ɾ�����ݿ�
         mRemindDBHelp.delete(currentRemindInfo);
         //ȡ������
-        JeffLog.d(TAG,"ȡ�����ӣ�currentRemindInfo = "+currentRemindInfo.toString());
         AlarmManagerUtil.cancelAlarm(cappuAiuiActivity,currentRemindInfo.getTime()+currentRemindInfo.getRepeatDate());
         //ˢ�½���
         refreshView();
@@ -210,7 +218,6 @@ public class RemindFragment extends BaseFragment implements CappuRemindAdapter.I
      */
     private void refreshView(){
         getData();
-        JeffLog.d(TAG,"refreshView---->�������ѣ�size = "+singleMap.size()+",�ظ����ѣ�size = "+repeatMap.size());
         mSingleRemindAdapter.notifyDataSetChanged();
         mRepeatRemindAdapter.notifyDataSetChanged();
         if(singleKeys.size() != 0){

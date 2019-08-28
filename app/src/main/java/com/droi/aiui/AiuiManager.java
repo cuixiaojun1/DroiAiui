@@ -9,6 +9,8 @@ import android.util.Log;
 
 import com.droi.aiui.controler.AIUIControler;
 import com.droi.aiui.controler.SpeechControler;
+import com.iflytek.business.speech.SpeechIntent;
+import com.iflytek.business.speech.SpeechServiceUtil;
 
 
 /**
@@ -26,7 +28,7 @@ public class AiuiManager {
     private AIUIControler mAIUIControler;
 
     private SpeechControler mSpeechControler;
-    private IMediaPlaybackService mMusicService;
+    //private IMediaPlaybackService mMusicService;
     private IMediaPlaybackServiceConnection mIMediaPlaybackServiceConnection = new IMediaPlaybackServiceConnection();
     private Context mContext;
 
@@ -96,25 +98,25 @@ public class AiuiManager {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             Log.d(TAG, "[AiuiManager][onServiceConnected]���ַ������ӳɹ���");
-            try {
+            /*try {
                 mMusicService = IMediaPlaybackService.Stub.asInterface(service);
             } catch (Exception e) {
                 mMusicService = null;
-            }
+            }*/
 
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             Log.d(TAG, "[AiuiManager][onServiceDisconnected]���ַ�������ʧ�ܣ�");
-            mMusicService = null;
+            //mMusicService = null;
         }
 
     }
 
-    public IMediaPlaybackService getMusicService() {
+    /*public IMediaPlaybackService getMusicService() {
         return mMusicService;
-    }
+    }*/
 
     /**
      * ��ʼ�����������

@@ -3,11 +3,31 @@ package com.droi.aiui.controler;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.droi.aiui.Interface.OnParseResultTextListener;
+import com.droi.aiui.adapter.AppParseAdapter;
+import com.droi.aiui.adapter.BaseParseAdapter;
+import com.droi.aiui.adapter.CmdParseAdapter;
+import com.droi.aiui.adapter.DefaultParseAdapter;
+import com.droi.aiui.adapter.MmsParseAdapter;
+import com.droi.aiui.adapter.MusicParseAdapter;
+import com.droi.aiui.adapter.OpenQAParseAdapter;
+import com.droi.aiui.adapter.PhoneParaseAdapter;
+import com.droi.aiui.adapter.RemindParseAdapter;
+import com.droi.aiui.adapter.SettingParseAdapter;
+import com.droi.aiui.bean.BaseBean;
+import com.droi.aiui.bean.Message;
+import com.droi.aiui.bean.Sentence;
+import com.droi.aiui.util.JsonParserUtil;
+import com.iflytek.business.speech.AIUIConstant;
+import com.iflytek.business.speech.AIUIEvent;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,7 +62,6 @@ public class ParseControler {
      */
     public String handleNlpResult(String json) {
         String serviceType = getServiceType(json);
-        CappuLog.d(TAG, "[ParseControler][handleNlpResult]serviceType = " + serviceType + ",rc = " + getCloudRc(json));
         if (serviceType != null) {
             switch (getServiceType(json)) {
                 case "openQA":
@@ -170,7 +189,6 @@ public class ParseControler {
     public void handleEventResult(Map<String,String> result,AIUIEvent event){
         // ��AIUIConstant.KEY_INTENT_ENGINE_TYPE��ΪAIUIConstant.ENGINE_TYPE_MIXED
         // ���ƶ˺ͱ��ؽ����������򱨴��ɿͻ����Լ�����ȡ�ᡣ
-        JeffLog.d(TAG,"handleEventResult");
         String bizParams = event.bundle.getString(AIUIConstant.KEY_INFO);
         try {
             JSONObject bizParamsJson = new JSONObject(bizParams);
@@ -192,11 +210,9 @@ public class ParseControler {
                     String strResult = cntJson.optString("intent");
                     //cloudReturnResult = handleNlpResult(strResult);
                     result.put(AIUIControler.KEY_CLOUD_RESULT,strResult);
-                    JeffLog.d(TAG,"���߽��============ �� "+strResult);
                 } else if ("asr".equals(sub)) {
                     // �����õ����������ʶ����
                     String strResult = cntJson.optString("intent");
-                    JeffLog.d(TAG,"���ؽ��============ �� "+strResult);
                     result.put(AIUIControler.KEY_LOCAL_RESULT,strResult);
                 }
 
@@ -223,8 +239,7 @@ public class ParseControler {
     /**
      * ���÷�����Ϣ
      */
-    public void setMessage(Message.MsgType msgType,Message.FromType fromType,String message){
-        JeffLog.d(TAG,"setMessage---->message = "+message);
+    public void setMessage(Message.MsgType msgType, Message.FromType fromType, String message){
         messageList.clear();
         Message temp = new Message();
         temp.msgType = msgType;

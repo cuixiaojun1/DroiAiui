@@ -6,14 +6,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
-import android.speech.RecognitionListener;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
 import com.droi.aiui.Interface.OnVolumeChangedListener;
 import com.droi.aiui.adapter.LocalParseAdapter;
+import com.droi.aiui.bean.Message;
 import com.droi.aiui.util.FunctionUtil;
+import com.iflytek.business.speech.AIUIAgent;
+import com.iflytek.business.speech.AIUIConstant;
+import com.iflytek.business.speech.AIUIEvent;
+import com.iflytek.business.speech.AIUIListener;
+import com.iflytek.business.speech.AIUIMessage;
+import com.iflytek.business.speech.RecognitionListener;
+import com.iflytek.business.speech.RecognizerResult;
+import com.iflytek.business.speech.SpeechError;
+import com.iflytek.business.speech.SpeechIntent;
+import com.iflytek.business.speech.SpeechServiceUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
