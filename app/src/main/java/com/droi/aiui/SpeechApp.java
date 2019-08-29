@@ -26,7 +26,7 @@ public class SpeechApp extends Application {
         mDataControler.startLoadApps();
         mDataControler.startLoadMusic();
         mDataControler.registerContentObservers(this);
-        CrashHandler.create(this);
+        //CrashHandler.create(this);
         //UMConfigure.init(this,  UMConfigure.DEVICE_TYPE_PHONE, null);
     }
 
