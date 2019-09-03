@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -46,6 +47,7 @@ public class RemindActivity extends Activity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cappu_remind_ui);
+        Log.d(TAG,"onCreate");
         StatusBarUtils.fullScreen(this);
         mMediaPlayer = new MediaPlayer();
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -59,10 +61,12 @@ public class RemindActivity extends Activity implements View.OnClickListener{
         reminds_cancel.setOnClickListener(this);
 
         currentRemindInfo = (RemindInfo) getIntent().getBundleExtra(FunctionUtil.KEY_REMINDINFO_DATA).getSerializable(FunctionUtil.KEY_REMINDINFO);
+        Log.d(TAG,"[RemindActivity][onCreate]currentRemindInfo = "+currentRemindInfo);
         if(!allRemindInfos.contains(currentRemindInfo)){
             allRemindInfos.add(currentRemindInfo);
         }
         remindDataTime = FunctionUtil.getRemindDateTime(currentRemindInfo.getTime());
+        Log.d(TAG,"[RemindActivity][onCreate]--->当前提醒："+currentRemindInfo+",remindDataTime = "+ AlarmManagerUtil.printTime(currentRemindInfo.getTime()));
 
         if(remindDataTime != null){
             reminds_date.setText(remindDataTime.getTime());
@@ -76,10 +80,12 @@ public class RemindActivity extends Activity implements View.OnClickListener{
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         currentRemindInfo = (RemindInfo) intent.getBundleExtra(FunctionUtil.KEY_REMINDINFO_DATA).getSerializable(FunctionUtil.KEY_REMINDINFO);
+        Log.d(TAG,"[RemindActivity][onNewIntent]currentRemindInfo = "+currentRemindInfo);
         if(!allRemindInfos.contains(currentRemindInfo)){
             allRemindInfos.add(currentRemindInfo);
         }
         remindDataTime = FunctionUtil.getRemindDateTime(currentRemindInfo.getTime());
+        Log.d(TAG,"onNewIntent--->当前提醒："+currentRemindInfo+",remindDataTime = "+currentRemindInfo);
 
         if(remindDataTime != null){
             reminds_date.setText(remindDataTime.getTime());
@@ -121,9 +127,10 @@ public class RemindActivity extends Activity implements View.OnClickListener{
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        String speech = "���ˣ�����"+reminds_content.getText()+"�ˣ�";
+                        String speech = "主人，您该"+reminds_content.getText()+"了！";
                         mSpeechControler.setSpeechContent(speech);
                         if(!mSpeechControler.isSpeaking()){
+                            Log.d(TAG,"开始播报！"+speech);
                             mSpeechControler.startSpeechByType("RemindActivity");
                         }
                     }
@@ -158,15 +165,16 @@ public class RemindActivity extends Activity implements View.OnClickListener{
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG,"onResume");
         mHandler.sendEmptyMessageDelayed(0,2000);
     }
     /**
-     * ��ʼ��������
+     * 开始播放铃声
      */
     private void startMedia() {
         try {
             mMediaPlayer.setDataSource(this,
-                    RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)); //��������ΪĬ����������
+                    RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)); //铃声类型为默认闹钟铃声
             mMediaPlayer.prepare();
             mMediaPlayer.setLooping(true);
             mMediaPlayer.start();
@@ -183,7 +191,7 @@ public class RemindActivity extends Activity implements View.OnClickListener{
     }
 
     /**
-     * �ر���������
+     * 关闭铃声播放
      */
     private void stopMedia(){
         if(mMediaPlayer.isPlaying()){
@@ -192,20 +200,22 @@ public class RemindActivity extends Activity implements View.OnClickListener{
     }
 
     /**
-     * ��ʼ��
+     * 开始震动
      */
     private void startVibrator() {
+        Log.d(TAG,"开始震动");
         /**
-         * �������𶯴�С����ͨ���ı�pattern���趨���������ʱ��̫�̣���Ч�����ܸо�����
+         * 想设置震动大小可以通过改变pattern来设定，如果开启时间太短，震动效果可能感觉不到
          */
-        long[] pattern = { 500, 1000, 500, 1000 }; // ֹͣ ���� ֹͣ ����
+        long[] pattern = { 500, 1000, 500, 1000 }; // 停止 开启 停止 开启
         vibrator.vibrate(pattern, 0);
     }
 
     /**
-     * ȡ����
+     * 取消震动
      */
     private void stopVibrator(){
+        Log.d(TAG,"停止震动");
         if(vibrator.hasVibrator()){
             vibrator.cancel();
         }

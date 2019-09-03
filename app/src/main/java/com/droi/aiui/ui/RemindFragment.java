@@ -1,6 +1,7 @@
 package com.droi.aiui.ui;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,7 +30,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by cuixiaojun on 17-12-28.
- * �������ý���
+ * 提醒设置界面
  */
 
 public class RemindFragment extends BaseFragment implements CappuRemindAdapter.IonItemClickListener,
@@ -94,18 +95,19 @@ public class RemindFragment extends BaseFragment implements CappuRemindAdapter.I
         singleKeys.clear();
         repeatMap.clear();
         repeatKeys.clear();
-        //�����ݿ��ȡ���е���������
+        //从数据库读取所有的提醒数据
         List<RemindInfo> remindInfos = mRemindDBHelp.queryRemindAll();
+        Log.d(TAG,"getData--->remindInfos = "+remindInfos.size());
         if (remindInfos != null && remindInfos.size() > 0) {
             for (int i = 0; i < remindInfos.size(); i++) {
-                //ˢ�����ݵ�ʱ����Ҫɾ���������ӣ����Ҹ����ѵ�ʱ���ڵ�ǰʱ��֮ǰ��
+                //刷新数据的时候需要删除单次闹钟，并且该提醒的时间在当前时间之前的
                 if(remindInfos.get(i).getTime() <= System.currentTimeMillis() && remindInfos.get(i).getRepeatDate().equals("ONETIME")){
                     if(mRemindDBHelp != null){
                         mRemindDBHelp.delete(remindInfos.get(i));
                     }
                 }
                 String day = getDay(remindInfos.get(i).getTime());
-                //�����еĵ�������������ӵ����������������
+                //将所有的单次提醒数据添加到单次提醒数据里边
                 if(remindInfos.get(i).getRepeatDate().equals("ONETIME")){
                     if (singleMap.size()>0 && singleMap.get(day) != null ) {
                         singleMap.get(day).add(remindInfos.get(i));
@@ -115,7 +117,7 @@ public class RemindFragment extends BaseFragment implements CappuRemindAdapter.I
                         list.add(remindInfos.get(i));
                         singleMap.put(day,list);
                     }
-                }else{//�����е��ظ�������ӵ��ظ������������
+                }else{//将所有的重复提醒添加到重复提醒数据里边
                     if (repeatMap.size()>0 && repeatMap.get(day) != null ) {
                         repeatMap.get(day).add(remindInfos.get(i));
                     } else {
@@ -126,34 +128,34 @@ public class RemindFragment extends BaseFragment implements CappuRemindAdapter.I
                     }
                 }
             }
-            //�Ե����������ݽ�������
+            //对单次提醒数据进行排序
             Iterator<String> iter = singleMap.keySet().iterator();
             while (iter.hasNext()) {
                 List<RemindInfo> list =  singleMap.get(iter.next());
-                //��ʱ������������ѵľ���ʱ�䣩
+                //对时间进行排序（提醒的具体时间）
                 Collections.sort(list,timeCompare);
             }
-            //�����ڽ�������(���ѵ�����)
+            //对日期进行排序(提醒的日期)
             Collections.sort(singleKeys,dateCompare);
-            //���ظ��������ݽ�������
+            //对重复提醒数据进行排序
             Iterator<String> iter1 = repeatMap.keySet().iterator();
             while (iter1.hasNext()) {
                 List<RemindInfo> list =  repeatMap.get(iter1.next());
-                //��ʱ������������ѵľ���ʱ�䣩
+                //对时间进行排序（提醒的具体时间）
                 Collections.sort(list,timeCompare);
             }
-            //�����ڽ�������(���ѵ�����)
+            //对日期进行排序(提醒的日期)
             Collections.sort(repeatKeys,dateCompare);
         }
     }
 
     private String getDay(long time) {
-        SimpleDateFormat format = new SimpleDateFormat("MM" + "��" + "dd" +"��");
+        SimpleDateFormat format = new SimpleDateFormat("MM" + "月" + "dd" +"日");
         return format.format(new Date(time));
     }
 
     /**
-     * ����ʱ������ѽ�������
+     * 根据时间对提醒进行排序
      */
     private Comparator timeCompare=new Comparator<RemindInfo>(){
         public int compare(RemindInfo arg0, RemindInfo arg1) {
@@ -162,7 +164,7 @@ public class RemindFragment extends BaseFragment implements CappuRemindAdapter.I
     };
 
     /**
-     * �������ڶ����ѽ�������
+     * 根据日期对提醒进行排序
      */
     private Comparator dateCompare=new Comparator<String>(){
         public int compare(String arg0, String arg1) {
@@ -171,37 +173,40 @@ public class RemindFragment extends BaseFragment implements CappuRemindAdapter.I
     };
 
     /**
-     * item���
+     * item点击
      * @param info
      */
     @Override
     public void onItemClickListen(RemindInfo info) {
         currentRemindInfo = info;
+        Log.d(TAG,"onItemClickListen--->remindInfo = "+info.toString());
         if (remindinfoDialig == null) {
             remindinfoDialig = new DialogRemindInfo(getActivity());
             remindinfoDialig.setDialogRemindInfoClickListen(this);
         }
-        //��ʾ������ϸ����Ϣ
+        //显示提醒详细的信息
         remindinfoDialig.showCurrentRemindInfo(currentRemindInfo);
     }
 
     /**
-     * ɾ����ǰ��remindinfo
+     * 删除当前的remindinfo
      */
     @Override
     public void onRemindInfoDel() {
-        //ɾ�����ݿ�
+        Log.d(TAG,"onRemindInfoDel");
+        //删除数据库
         mRemindDBHelp.delete(currentRemindInfo);
-        //ȡ������
+        //取消提醒
+        Log.d(TAG,"取消闹钟：currentRemindInfo = "+currentRemindInfo.toString());
         AlarmManagerUtil.cancelAlarm(cappuAiuiActivity,currentRemindInfo.getTime()+currentRemindInfo.getRepeatDate());
-        //ˢ�½���
+        //刷新界面
         refreshView();
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        //���ѽ�������л���ʱ�����Խ���
+        //提醒界面进行切换的时候数显界面
         if(!hidden){
             refreshView();
         }
@@ -209,15 +214,16 @@ public class RemindFragment extends BaseFragment implements CappuRemindAdapter.I
 
     @Override
     public void onRemindCancel() {
-        //������ʱ�䵽��ɾ�����ӣ����ص����ѽ����ʱ��Ҳ��Ҫˢ�½���
+        //当闹钟时间到，删除闹钟，返回到提醒界面的时候也需要刷新界面
         refreshView();
     }
 
     /**
-     * ˢ�½���
+     * 刷新界面
      */
     private void refreshView(){
         getData();
+        Log.d(TAG,"refreshView---->单次提醒：size = "+singleMap.size()+",重复提醒：size = "+repeatMap.size());
         mSingleRemindAdapter.notifyDataSetChanged();
         mRepeatRemindAdapter.notifyDataSetChanged();
         if(singleKeys.size() != 0){

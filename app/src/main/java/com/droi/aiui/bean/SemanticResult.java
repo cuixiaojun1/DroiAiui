@@ -7,15 +7,15 @@ import org.json.JSONObject;
  */
 
 public class SemanticResult {
-    //������
+    //返回码
     private int rc;
-    //����
+    //服务
     private String service;
-    //���ص��ı�
+    //返回的文本
     private String answerText;
-    //���ص�����
+    //返回的数据
     private JSONObject data;
-    //���ص�����
+    //返回的语义
     private JSONObject semantic;
 
     public int getRc() {

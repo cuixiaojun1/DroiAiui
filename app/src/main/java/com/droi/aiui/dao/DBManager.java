@@ -34,7 +34,7 @@ public class DBManager {
 
 
     /**
-     * �ر����ݿ�
+     * 关闭数据库
      */
     public void closeDataBase() {
         db.close();
@@ -43,19 +43,19 @@ public class DBManager {
     }
 
     /**
-     * ɾ�����ݿ�
+     * 删除数据库
      *
-     * @return �ɹ�����true�����򷵻�false
+     * @return 成功返回true，否则返回false
      */
     public boolean deleteDataBase() {
         return mContext.deleteDatabase(db_name);
     }
 
     /**
-     * ����һ������
+     * 插入一条数据
      *
      * @param obj
-     * @return ����-1����������ݿ�ʧ�ܣ�����ɹ�
+     * @return 返回-1代表插入数据库失败，否则成功
      * @throws IllegalAccessException
      */
     public long insert(Object obj) {
@@ -66,7 +66,7 @@ public class DBManager {
         for (Field fd : fields) {
             fd.setAccessible(true);
             String fieldName = fd.getName();
-            //�޳�����idֵ�ñ��棬���ڿ��Ĭ������idΪ�����Զ�����
+            //剔除主键id值得保存，由于框架默认设置id为主键自动增长
             if (fieldName.equalsIgnoreCase("id") || fieldName.equalsIgnoreCase("_id")) {
                 continue;
             }
@@ -77,11 +77,11 @@ public class DBManager {
 
 
     /**
-     * ��ѯ���ݿ������е�����
+     * 查询数据库中所有的数据
      *
      * @param clazz
-     * @param <T>   �� List����ʽ�������ݿ�����������
-     * @return ����list����
+     * @param <T>   以 List的形式返回数据库中所有数据
+     * @return 返回list集合
      * @throws IllegalAccessException
      * @throws InstantiationException
      * @throws NoSuchMethodException
@@ -93,13 +93,13 @@ public class DBManager {
     }
 
     /**
-     * ����ָ�������������������ļ�¼
+     * 根据指定条件返回满足条件的记录
      *
-     * @param clazz      ��
-     * @param select     ������� ����"id>��"��
-     * @param selectArgs ����(new String[]{"0"}) ��ѯid=0�ļ�¼
-     * @param <T>        ����
-     * @return ��������������list����
+     * @param clazz      类
+     * @param select     条件语句 ：（"id>？"）
+     * @param selectArgs 条件(new String[]{"0"}) 查询id=0的记录
+     * @param <T>        类型
+     * @return 返回满足条件的list集合
      */
     public <T> List<T> findByArgs(Class<T> clazz, String select, String[] selectArgs) {
         Cursor cursor = db.query(clazz.getSimpleName(), null, select, selectArgs, null, null, null);
@@ -107,12 +107,12 @@ public class DBManager {
     }
 
     /**
-     * ͨ��id�����ƶ�����
+     * 通过id查找制定数据
      *
-     * @param clazz ָ����
-     * @param id    ����id
-     * @param <T>   ����
-     * @return �������������Ķ���
+     * @param clazz 指定类
+     * @param id    条件id
+     * @param <T>   类型
+     * @return 返回满足条件的对象
      */
     public <T> T findById(Class<T> clazz, int id) {
         Cursor cursor = db.query(clazz.getSimpleName(), null, "id=" + id, null, null, null, null);
@@ -121,17 +121,17 @@ public class DBManager {
     }
 
     /**
-     * ɾ����¼һ����¼
+     * 删除记录一条记录
      *
-     * @param clazz ��Ҫɾ��������
-     * @param id    ��Ҫɾ���� id����
+     * @param clazz 需要删除的类名
+     * @param id    需要删除的 id索引
      */
     public void deleteById(Class<?> clazz, long id) {
         int delete = db.delete(DBUtils.getTableName(clazz), "id=" + id, null);
     }
 
     /**
-     * ɾ�����ݿ���ָ���ı�
+     * 删除数据库中指定的表
      *
      * @param clazz
      */
@@ -140,11 +140,11 @@ public class DBManager {
     }
 
     /**
-     * ����һ����¼
+     * 更新一条记录
      *
-     * @param clazz  ��
-     * @param values ���¶���
-     * @param id     ����id����
+     * @param clazz  类
+     * @param values 更新对象
+     * @param id     更新id索引
      */
     public void updateById(Class<?> clazz, ContentValues values, long id) {
         db.update(clazz.getSimpleName(), values, "id=" + id, null);
@@ -176,7 +176,7 @@ public class DBManager {
     }
 
     /**
-     * �õ����䷽���еĲ�������
+     * 得到反射方法中的参数类型
      *
      * @param field
      * @param fieldValue
@@ -201,7 +201,7 @@ public class DBManager {
     }
 
     /**
-     * �Ƿ����ַ�����
+     * 是否是字符类型
      *
      * @param field
      * @return
@@ -212,7 +212,7 @@ public class DBManager {
     }
 
     /**
-     * �õ����������
+     * 得到对象的类型
      *
      * @param primitiveType
      * @return
@@ -243,7 +243,7 @@ public class DBManager {
 
 
     /**
-     * �����ݿ�õ�ʵ����
+     * 从数据库得到实体类
      *
      * @param cursor
      * @param clazz
@@ -342,7 +342,7 @@ public class DBManager {
 
 
     /**
-     * ���ݿ������
+     * 数据库帮助类
      */
     class MySqLiteHelper extends SQLiteOpenHelper {
         private static final String TAG = "MySqLiteHelper";
@@ -370,17 +370,17 @@ public class DBManager {
         }
 
         /**
-         * �����ƶ�����������
+         * 根据制定类名创建表
          */
         private void createTable(SQLiteDatabase db) {
             db.execSQL(getCreateTableSql(mClazz));
         }
 
         /**
-         * �õ��������
+         * 得到建表语句
          *
-         * @param clazz ָ����
-         * @return sql���
+         * @param clazz 指定类
+         * @return sql语句
          */
         private String getCreateTableSql(Class<?> clazz) {
             StringBuilder sb = new StringBuilder();

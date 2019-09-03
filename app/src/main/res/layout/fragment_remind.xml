@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.cappu.aiui.ui.RemindFragment">
+    tools:context="com.droi.aiui.ui.RemindFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
@@ -85,7 +85,7 @@
                     android:textSize="22sp"
                     android:layout_marginLeft="10dp"
                     android:visibility="gone"/>
-                <com.cappu.aiui.ui.RemindListView
+                <com.droi.aiui.ui.RemindListView
                     android:id="@+id/single_listview"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -94,7 +94,7 @@
                     android:listSelector="#00000000"
                     android:scrollbars="none"
                     android:visibility="gone">
-                </com.cappu.aiui.ui.RemindListView>
+                </com.droi.aiui.ui.RemindListView>
                 <TextView
                     android:id="@+id/repeat_reminder"
                     android:layout_width="wrap_content"
@@ -105,7 +105,7 @@
                     android:textSize="22sp"
                     android:layout_marginLeft="10dp"
                     android:visibility="gone"/>
-                <com.cappu.aiui.ui.RemindListView
+                <com.droi.aiui.ui.RemindListView
                     android:id="@+id/repeat_listview"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -114,7 +114,7 @@
                     android:listSelector="#00000000"
                     android:scrollbars="none"
                     android:visibility="gone">
-                </com.cappu.aiui.ui.RemindListView>
+                </com.droi.aiui.ui.RemindListView>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

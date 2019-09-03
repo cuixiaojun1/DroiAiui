@@ -1,6 +1,7 @@
 package com.droi.aiui.adapter;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.droi.aiui.util.FunctionUtil;
 
@@ -13,6 +14,7 @@ public class DefaultParseAdapter extends BaseParseAdapter {
     private final String TAG = "DefaultParseAdapter";
     private Context mContext;
     public DefaultParseAdapter(Context context) {
+        Log.d(TAG,"DefaultParaseAdapter");
         mContext = context;
     }
 

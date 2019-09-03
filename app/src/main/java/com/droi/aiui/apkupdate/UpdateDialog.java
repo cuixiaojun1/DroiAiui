@@ -22,13 +22,13 @@ class UpdateDialog {
             builder.setMessage(Html.fromHtml(content))
                     .setPositiveButton(R.string.android_auto_update_dialog_btn_download, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            Toast.makeText(context,"�Ѿ��ں�̨Ϊ�����أ����Ե�֪ͨ���鿴!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context,"已经在后台为你下载，可以到通知栏查看!", Toast.LENGTH_SHORT).show();
                             goToDownload(context, downloadUrl,apkName);
                         }
                     })
                     .setNegativeButton(R.string.android_auto_update_dialog_btn_cancel, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            if (isForce)  //�˳�Ӧ��
+                            if (isForce)  //退出应用
                             {
                                 System.exit(0);
                             }
@@ -36,7 +36,7 @@ class UpdateDialog {
                     });
 
             AlertDialog dialog = builder.create();
-            //����Ի�������,�Ի�����ʧ
+            //点击对话框外面,对话框不消失
             dialog.setCanceledOnTouchOutside(false);
             dialog.show();
         }
@@ -48,7 +48,7 @@ class UpdateDialog {
 
 
     private static void goToDownload(Context context, String downloadUrl,String apkName) {
-        if (!isServiceWork(context,"com.cappu.aiui.apkupdate.DownloadService"))
+        if (!isServiceWork(context,"com.droi.aiui.apkupdate.DownloadService"))
         {
             Intent intent = new Intent(context.getApplicationContext(), DownloadService.class);
             intent.putExtra(Constants.APK_DOWNLOAD_URL, downloadUrl);
@@ -58,12 +58,12 @@ class UpdateDialog {
     }
 
     /**
-     * �ж�ĳ�������Ƿ��������еķ���
+     * 判断某个服务是否正在运行的方法
      *
      * @param mContext
      * @param serviceName
-     *            �ǰ���+��������������磺net.loonggg.testbackstage.TestService��
-     * @return true�����������У�false�������û����������
+     *            是包名+服务的类名（例如：net.loonggg.testbackstage.TestService）
+     * @return true代表正在运行，false代表服务没有正在运行
      */
     private static boolean isServiceWork(Context mContext, String serviceName) {
         boolean isWork = false;

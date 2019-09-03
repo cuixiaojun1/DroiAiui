@@ -11,10 +11,10 @@ public class PhoneBean extends BaseBean {
 
 
     /**
-     * data : {"result":[{"fuzzy_score":1,"hasMorePhoneNumber":false,"location":{"city":"�ൺ��","province":"ɽ��"},"name":"��С��","phoneNumber":"15376420781","teleOper":"����"},{"fuzzy_score":1,"hasMorePhoneNumber":false,"location":{"city":"�ൺ��","province":"ɽ��"},"name":"��С��","phoneNumber":"15376420782","teleOper":"����"},{"fuzzy_score":1,"hasMorePhoneNumber":false,"location":{"city":"�Ϻ�"},"name":"��С��","phoneNumber":"17601385666","teleOper":"��ͨ"}]}
-     * semantic : [{"intent":"DIAL","slots":[{"name":"name","value":"��С��"}]}]
+     * data : {"result":[{"fuzzy_score":1,"hasMorePhoneNumber":false,"location":{"city":"青岛市","province":"山东"},"name":"崔小俊","phoneNumber":"15376420781","teleOper":"电信"},{"fuzzy_score":1,"hasMorePhoneNumber":false,"location":{"city":"青岛市","province":"山东"},"name":"崔小俊","phoneNumber":"15376420782","teleOper":"电信"},{"fuzzy_score":1,"hasMorePhoneNumber":false,"location":{"city":"上海"},"name":"崔小俊","phoneNumber":"17601385666","teleOper":"联通"}]}
+     * semantic : [{"intent":"DIAL","slots":[{"name":"name","value":"崔小俊"}]}]
      * used_state : {"name":"1","operation":"1","state":"moreNumber","state_key":"fg::telephone::default::moreNumber"}
-     * answer : {"text":"���ã���Ϊ���ҵ���С��������룬��ѡ��"}
+     * answer : {"text":"您好！已为您找到崔小俊多个号码，请选择？"}
      * dialog_stat : dataInvalid
      * save_history : true
      */
@@ -89,10 +89,10 @@ public class PhoneBean extends BaseBean {
             /**
              * fuzzy_score : 1
              * hasMorePhoneNumber : false
-             * location : {"city":"�ൺ��","province":"ɽ��"}
-             * name : ��С��
+             * location : {"city":"青岛市","province":"山东"}
+             * name : 崔小俊
              * phoneNumber : 15376420781
-             * teleOper : ����
+             * teleOper : 电信
              */
 
             private int fuzzy_score;
@@ -152,8 +152,8 @@ public class PhoneBean extends BaseBean {
 
             public static class LocationBean {
                 /**
-                 * city : �ൺ��
-                 * province : ɽ��
+                 * city : 青岛市
+                 * province : 山东
                  */
 
                 private String city;
@@ -227,7 +227,7 @@ public class PhoneBean extends BaseBean {
     public static class SemanticBean {
         /**
          * intent : DIAL
-         * slots : [{"name":"name","value":"��С��"}]
+         * slots : [{"name":"name","value":"崔小俊"}]
          */
 
         private String intent;
@@ -252,7 +252,7 @@ public class PhoneBean extends BaseBean {
         public static class SlotsBean {
             /**
              * name : name
-             * value : ��С��
+             * value : 崔小俊
              */
 
             private String name;

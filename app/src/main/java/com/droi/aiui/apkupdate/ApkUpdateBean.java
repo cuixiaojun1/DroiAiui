@@ -10,8 +10,8 @@ public class ApkUpdateBean {
     /**
      * icon : /v1/getFile?path=/upload/clientfile/20180209093543105.png
      * isforce : false
-     * description : ���մ������
-     * name : ���մ�����°汾
+     * description : 才艺大道二期
+     * name : 才艺大道线下版本
      * md5 : 8e91fe7de0c85c1de184d1b25d35007e
      * path : /v1/getFile?path=/upload/clientfile/20180209093543105.apk
      * rt : 1

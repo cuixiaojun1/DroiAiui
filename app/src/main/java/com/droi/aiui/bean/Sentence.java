@@ -5,12 +5,12 @@ import java.util.List;
 
 /**
  * Created by cuixiaojun on 18-1-8.
- * �䣬���ڴ�����Ľ��
+ * 句，用于存解析的结果
  */
 
 public class Sentence {
-    /** �ı� */
+    /** 文本 */
     public String mText = "";
-    /** sn�Ķ��� */
+    /** sn的队列 */
     public List<Integer> mSns = new ArrayList<Integer>();
 }

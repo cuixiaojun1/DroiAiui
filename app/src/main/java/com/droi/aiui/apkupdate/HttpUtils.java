@@ -1,6 +1,7 @@
 package com.droi.aiui.apkupdate;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,6 +29,7 @@ public class HttpUtils {
                 .append("&pack=")
                 .append("com.cappu.aiui")
                 .toString();
+        Log.d("HttpUtils","[HttpUtils][get]postUrl = "+postUrl);
         HttpURLConnection uRLConnection = null;
         InputStream is = null;
         BufferedReader buffer = null;

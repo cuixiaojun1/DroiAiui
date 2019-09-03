@@ -5,6 +5,7 @@ import android.content.Context;
 
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.droi.aiui.util.JsonParserUtil;
 
@@ -29,6 +30,7 @@ class CheckUpdateTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
+        Log.d(TAG,"[CheckUpdateTask][onPostExecute]result = "+result);
         if (!TextUtils.isEmpty(result)) {
             parseJson(result);
         }
@@ -42,6 +44,7 @@ class CheckUpdateTask extends AsyncTask<Void, Void, String> {
         String updateMessage = apkUpdateBean.getDescription();
         boolean isForce = apkUpdateBean.isIsforce();
         String apkUrl = Constants.BASE_URL + apkUpdateBean.getPath() + "&sign="+Constants.SIGN + "&appkey=" + Constants.APPKEY;
+        Log.d(TAG,"[parseJson]apkUrl = "+apkUrl);
         int versionCode = AppUtils.getVersionCode(mContext);
         if (apkCode > versionCode) {
             showDialog(mContext, updateMessage, apkUrl, apkUpdateBean.getPath(), isForce);

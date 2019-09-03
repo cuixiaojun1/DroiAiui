@@ -2,6 +2,7 @@ package com.droi.aiui.dao;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.util.Log;
 
 import com.droi.aiui.bean.RemindInfo;
 
@@ -31,44 +32,50 @@ public class RemindDBHelp {
     }
 
     /**
-     * ��������
+     * 插入数据
      * @param info
      */
     public boolean insert(RemindInfo info){
         boolean isExist = false;
 
         List<RemindInfo> remindInfos = queryRemindAll();
+        Log.d(TAG,"insert--->remindInfos.size  = "+remindInfos.size());
         if (remindInfos != null && remindInfos.size() > 0) {
             for (int i = 0; i < remindInfos.size(); i++) {
                 RemindInfo remindInfo = remindInfos.get(i);
                 if (remindInfo.getTime() == info.getTime() && remindInfo.getRepeatDate().equals(info.getRepeatDate())) {
                     remindInfo.setContent(remindInfo.getContent()+","+info.getContent());
+                    Log.d(TAG,"更新提醒---->remindInfo = "+remindInfo);
                     update(remindInfo);
                     isExist = true;
                     break;
                 }
             }
             if (!isExist) {
+                Log.d(TAG,"添加提醒---->remindInfo = "+info);
                 long insert = dbManager.insert(info);
                 info.setId(insert);
             }
         } else {
+            Log.d(TAG,"添加提醒====>remindInfo = "+info);
             long insert = dbManager.insert(info);
             info.setId(insert);
+            Log.d(TAG,"添加提醒>>>>>>>>>>insert = "+insert);
         }
         return isExist;
     }
 
     /**
-     * ɾ��
+     * 删除
      * @param
      */
     public void delete(RemindInfo info) {
+        Log.d(TAG,"删除数据库闹钟："+info.toString());
         dbManager.deleteById(RemindInfo.class, info.getId());
     }
 
     /**
-     * ��ѯ����
+     * 查询所有
      */
     public List<RemindInfo> queryRemindAll() {
         List<RemindInfo> remindInfos = dbManager.findAll(RemindInfo.class);

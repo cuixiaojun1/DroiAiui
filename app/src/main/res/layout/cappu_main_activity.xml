@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@mipmap/cappu_voice_default_background11"
     android:fitsSystemWindows="true"
-    tools:context="com.cappu.aiui.ui.CappuAiuiActivity">
+    tools:context="com.droi.aiui.ui.DroiAiuiMainActivity">
 
 
     <FrameLayout

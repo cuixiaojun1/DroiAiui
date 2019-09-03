@@ -62,21 +62,21 @@ public class CappuRemindAdapter extends BaseAdapter{
         }else {
             holder= (ViewHolder) convertView.getTag();
         }
-        //���е�����
+        //所有的提醒
         final List<RemindInfo> remindDetails = map.get(keys.get(position));
-        //������ʱ���ʽ����ȡ���������������
+        //将提醒时间格式化，取出具体的提醒日期
         String day = FunctionUtil.getRemindDateTime(remindDetails.get(0).getTime()).getDay();
         holder.remindInfo_date.setText(day);
-        //����ǰϵͳʱ���ʽ����ȡ�������ϵͳʱ���
-        //���������
+        //将当前系统时间格式化，取出具体的系统时间戳
+        //今天的日期
         String todayDate = FunctionUtil.getRemindDateTime(System.currentTimeMillis()).getDay();
-        //���������
+        //明天的日期
         String tomorrowDate = FunctionUtil.getRemindDateTime(System.currentTimeMillis()+ 24 * 3600 * 1000).getDay();
-        //���������
+        //后天的日期
         String acquiredDate = FunctionUtil.getRemindDateTime(System.currentTimeMillis()+ 24 * 3600 * 1000 * 2).getDay();
-        //���ѵ�����
+        //提醒的星期
         String week = FunctionUtil.getRemindDateTime(remindDetails.get(0).getTime()).getWeek();
-        //�ж��������ں͵�ǰϵͳ�����Ƿ�һ�£����һ���򽫵�ǰ�������ı���ɫ����Ϊ��ɫ����������ʾ��ǰ����ɫ
+        //判断提醒日期和当前系统日期是否一致，如果一致则将当前的日期文本颜色设置为红色，否则还是显示当前的颜色�
         if(day.equals(todayDate)) {
             holder.remindInfo_data_tips.setText(R.string.reminds_data_tips_today);
             holder.remindInfo_date.setTextColor(ContextCompat.getColor(mContext,R.color.remind_detail_delete_text_color));
@@ -96,15 +96,15 @@ public class CappuRemindAdapter extends BaseAdapter{
         }
         holder.container.removeAllViews();
         for (int i = 0; i < remindDetails.size(); i++) {
-            //���ѵ���ϸview����Ҫ�������ѵľ���ʱ������ѵ�����
+            //提醒的详细view，主要包含提醒的具体时间和提醒的内容
             View childView=inflater.inflate(R.layout.item_remind_details,null);
-            //�����ѵ���ϸ��Ϣ��ʱ�����������Ա��ߵ���鿴�������������
+            //将提醒的详细信息临时保存起来，以便后边点击查看具体的提醒详情
             childView.setTag(remindDetails.get(i));
-            //Ϊÿ���������õ������
+            //为每条提醒设置点击监听
             childView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //����������¼��ص���RemindFragment
+                    //将点击监听事件回调到RemindFragment
                     if (ionItemClickListener!=null) {
                         RemindInfo cinfo= (RemindInfo) view.getTag();
                         ionItemClickListener.onItemClickListen(cinfo);

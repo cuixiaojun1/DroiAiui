@@ -18,13 +18,13 @@ import java.util.List;
 
 /**
  * Created by cuixiaojun on 17-12-18.
- * ��Ե绰���ܽ��н���,��Ҫ������绰��������ʹ���绰��صĶ�����
+ * 针对电话技能进行解析,主要负责处理电话解析结果和处理电话相关的动作。
  */
 
 public class PhoneParaseAdapter extends BaseParseAdapter {
 
     private final String TAG = "PhoneParaseAdapter";
-    //�绰��������
+    //电话解析对象
     private PhoneBean mPhoneBean;
     private Context mContext;
     private static Contact mContact;
@@ -38,7 +38,8 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
 
     @Override
     public String getSemanticResultText(String json) {
-        mPhoneBean = JsonParserUtil.parseJsonObject(json, PhoneBean.class);
+        Log.d(TAG,"getSemanticResultText---->json = "+json);
+        mPhoneBean = JsonParserUtil.parseJsonObject(json,PhoneBean.class);
         String answer = parseResult();
         if(TextUtils.isEmpty(answer)){
             answer = mContext.getString(R.string.text_no_result);
@@ -47,9 +48,10 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
     }
 
     /**
-     * ���ݲ�ͬ�ķ����뷵�ز�ͬ����ʾ��
+     * 根据不同的返回码返回不同的提示语
      */
     private String parseResult(){
+        Log.d(TAG,"parseResult--->getRc = "+mPhoneBean.getRc());
         String result = null;
         switch (mPhoneBean.getRc()){
             case 0:
@@ -57,13 +59,13 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
                 result = handleDialerIntent();
                 break;
             case 1:
-                result = "�����쳣!";
+                result = "输入异常!";
                 break;
             case 2:
-                result = "ϵͳ�ڲ��쳣";
+                result = "系统内部异常";
                 break;
             case 4:
-                result = "�Բ��𣬲�������˵����ʲô��˼���뻻һ��˵�����ԣ�";
+                result = "对不起，不明白您说的是什么意思，请换一种说法试试！";
                 break;
                 default:
                     break;
@@ -72,7 +74,7 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
     }
 
     /**
-     * ������ϵ�˵�״̬
+     * 处理联系人的状态
      */
     private String handleState(){
         contacts.clear();
@@ -89,7 +91,7 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
                     AiuiManager.getInstance(mContext).cancelVoiceNlp();
                 }
             },3000);
-            return "����Ϊ������"+contactName;
+            return "正在为您呼叫"+contactName;
         }else if(!TextUtils.isEmpty(contactName)){
             contacts = getContactsInfoByName(mDataControler.loadAllContacts(),contactName);
         }else if(!TextUtils.isEmpty(contactNumber)){
@@ -101,16 +103,17 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
                     AiuiManager.getInstance(mContext).cancelVoiceNlp();
                 }
             },3000);
-            return "����Ϊ������"+contactNumber;
+            return "正在为您呼叫"+contactNumber;
         }else{
-            return "�Ҳ��Ǻ�������˵����ʲô��˼��";
+            return "我不是很明白您说的是什么意思！";
         }
+        Log.d(TAG,"[handleState]getContactState = "+getContactState()+",contactName = "+contactName+",size = "+contacts.size());
         String result = null;
         switch (getContactState()){
             case "moreNumber":
                 StringBuffer phoneNumber = new StringBuffer();
                 for (int i = 0; i <contacts.size(); i++) {
-                    phoneNumber.append("��"+(i+1)+"�����룺\n"+contacts.get(i).getPhoneNumber());
+                    phoneNumber.append("第"+(i+1)+"个号码：\n"+contacts.get(i).getPhoneNumber());
                     phoneNumber.append("\n");
                 }
                 result = getAnswerText()+"\n"+phoneNumber.toString();
@@ -118,7 +121,7 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
             case "moreContact":
                 StringBuffer contact = new StringBuffer();
                 for (int i = 0; i <contacts.size(); i++) {
-                    contact.append("��"+(i+1)+"��:"+contacts.get(i).getName()+"\n"+contacts.get(i).getPhoneNumber());
+                    contact.append("第"+(i+1)+"个:"+contacts.get(i).getName()+"\n"+contacts.get(i).getPhoneNumber());
                     contact.append("\n");
                 }
                 result = getAnswerText()+"\n"+contact.toString();
@@ -137,9 +140,10 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
     }
 
     /**
-     * ���ݲ�ͬ�ĵ绰��ͼ����ͬ���߼�
+     * 根据不同的电话意图处理不同的逻辑
      */
     private String handleDialerIntent(){
+        Log.d(TAG,"[handleDialerIntent]getDialerIntent = "+getDialerIntent());
         String returnString = null;
         switch (getDialerIntent()){
             case "DIAL":
@@ -158,7 +162,7 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
     }
 
     /**
-     * ������绰��ͼ
+     * 处理拨打电话意图
      */
     private String handleCallAction(){
         String returnString;
@@ -166,7 +170,7 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
             if(!TextUtils.isEmpty(mContact.getName())){
                 if(isContactExisted(mDataControler.getAllContactNames(),mContact.getName())){
                     if(!TextUtils.isEmpty(mContact.getPhoneNumber())){
-                        returnString = "����Ϊ������"+mContact.getName();
+                        returnString = "正在为您呼叫"+mContact.getName();
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -177,14 +181,14 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
                             }
                         },3000);
                     }else{
-                        returnString = "������ĵ绰����Ϊ�պţ���ȷ��֮�����³��ԣ�";
+                        returnString = "您拨打的电话号码为空号，请确认之后重新尝试！";
                     }
                 }else{
-                    returnString = "�Բ���û���������ֻ����ҵ���ϵ��"+mContact.getName()+"!";
+                    returnString = "对不起，没有在您的手机中找到联系人"+mContact.getName()+"!";
                 }
             }else if(!TextUtils.isEmpty(mContact.getPhoneNumber())){
                 if(!TextUtils.isEmpty(mContact.getPhoneNumber())){
-                    returnString = "����Ϊ������"+mContact.getPhoneNumber();
+                    returnString = "正在为您呼叫"+mContact.getPhoneNumber();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -195,26 +199,27 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
                         }
                     },3000);
                 }else{
-                    returnString = "������ĵ绰����Ϊ�պţ���ȷ��֮�����³��ԣ�";
+                    returnString = "您拨打的电话号码为空号，请确认之后重新尝试！";
                 }
             }else{
-                returnString = "�Բ�����Ҫ�������ϵ�˲����ڣ�";
+                returnString = "对不起，您要拨打的联系人不存在！";
             }
         }else{
-            returnString = "�Բ���û���������ֻ����ҵ�����ϵ�ˣ�";
+            returnString = "对不起，没有在您的手机中找到该联系人！";
         }
         return returnString;
     }
 
     /**
-     * ������������
+     * 处理请求命令
      * @param
      */
     private String handleInstruction(){
+        Log.d(TAG,"processInstruction---->getConfirmType = "+getConfirmType());
         String returnString = null;
         switch (getConfirmType()){
             case "CONFIRM":
-                returnString = "�Բ�����û��������˵����ʲô��˼�������Ի���˵�����ԣ�";
+                returnString = "对不起，我没有听懂你说的是什么意思，您可以换种说法试试！";
                 break;
             case "QUIT":
                 returnString = mContext.getString(R.string.text_cancel_call);
@@ -223,13 +228,14 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
             case "SEQUENCE":
                 int index = Integer.parseInt(getPhoneNumberIndex());
                 if(contacts != null && contacts.size() != 0){
+                    Log.d(TAG,"SEQUENCE---->index = "+index+",number = "+contacts.size());
                     for (int i = 0; i < contacts.size(); i++) {
                         if(index < 0 || index > contacts.size()){
-                            returnString = "�Բ�����ѡ����������������ѡ��";
+                            returnString = "对不起，您选择的序号有误，请重新选择！";
                         }else{
                             final Contact contact = contacts.get(index-1);
                             if(!TextUtils.isEmpty(contact.getName()) && !TextUtils.isEmpty(contact.getPhoneNumber())){
-                                returnString = "����Ϊ������"+contact.getName();
+                                returnString = "正在为您呼叫"+contact.getName();
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
@@ -239,13 +245,13 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
                                     }
                                 }, 3000);
                             }else{
-                                returnString = "���������ϵ�˲����ڣ���ȷ��֮�����³��ԣ�";
+                                returnString = "您拨打的联系人不存在，请确认之后重新尝试！";
                             }
                         }
                     }
                     contacts.clear();
                 }else{
-                    returnString = "���������ϵ�˲����ڣ���ȷ��֮�����³��ԣ�";
+                    returnString = "您拨打的联系人不存在，请确认之后重新尝试！";
                 }
                 break;
             default:
@@ -256,7 +262,7 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
     }
 
     /**
-     * ��ȡ�绰�������ָ��
+     * 获取电话操作相关指令
      * @param
      * @return
      */
@@ -281,7 +287,7 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
     }
 
     /**
-     * ��ȡ���������ص��ı��ִ�
+     * 获取服务器返回的文本字串
      * @param
      * @return
      */
@@ -290,11 +296,11 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
     }
 
     /**
-     *  ��ȡ�绰��ͼ���ܹ������֣��ֱ�Ϊ��
-     *      DIAL        //����绰
-     *      RECTIFY     //�޸���ϵ�ˡ�����
-     *      CANCEL      //������ϵ�ˡ�����
-     *      INSTRUCTION //����ָ��
+     *  获取电话意图，总共有四种，分别为：
+     *      DIAL        //拨打电话
+     *      RECTIFY     //修改联系人、号码
+     *      CANCEL      //纠正联系人、号码
+     *      INSTRUCTION //操作指令
      */
     private String getDialerIntent(){
         String dialerIntent=null;
@@ -311,7 +317,7 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
     }
 
     /**
-     * ��ȡ�ض���ϵ�˵绰�����λ��
+     * 获取特定联系人电话号码的位置
      */
     private String getPhoneNumberIndex(){
         String index = null;
@@ -330,7 +336,7 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
     }
 
     /**
-     * ��ȡ��ϵ�˵�״̬
+     * 获取联系人的状态
      */
     private String getContactState(){
         String state = null;
@@ -342,7 +348,7 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
     }
 
     /**
-     * ͨ����ϵ�����ƻ�ȡ��ϵ�˵绰����
+     * 通过联系人名称获取联系人电话号码
      */
     private List<Contact> getContactsInfoByName(List<Contact> allContacts,String name){
         List<Contact> contacts = new ArrayList<>();
@@ -356,7 +362,7 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
     }
 
     /**
-     * ��ȡҪ�������ϵ�˺���
+     * 获取要拨打的联系人号码
      */
     private String getPhoneNumberFromPhoneBean(){
         String phoneNumber = null;
@@ -379,7 +385,7 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
     }
 
     /**
-     *  ��ȡҪ�������ϵ������
+     *  获取要拨打的联系人名称
      */
     private String getContactNameFromPhoneBean(){
         String contantName = null;
@@ -402,7 +408,7 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
     }
 
     /**
-     * ��ȡ��ϵ�˵�������Ϣ
+     * 获取联系人的所有信息
      */
     private ArrayList<Contact> getContactInfoFromPhoneBean(){
         ArrayList<Contact> contacts = new ArrayList<Contact>();
@@ -429,12 +435,12 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
                     if(!TextUtils.isEmpty(carrier)){
                         contact.setCarrier(carrier);
                     }else{
-                        contact.setCarrier("δ֪");
+                        contact.setCarrier("未知");
                     }
                     if(!TextUtils.isEmpty(location)){
                         contact.setLocation(location);
                     }else{
-                        contact.setLocation("δ֪");
+                        contact.setLocation("未知");
                     }
                     contacts.add(contact);
                 }
@@ -453,12 +459,12 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
                 if(!TextUtils.isEmpty(carrier)){
                     contact.setCarrier(carrier);
                 }else{
-                    contact.setCarrier("δ֪");
+                    contact.setCarrier("未知");
                 }
                 if(!TextUtils.isEmpty(location)){
                     contact.setLocation(location);
                 }else{
-                    contact.setLocation("δ֪");
+                    contact.setLocation("未知");
                 }
                 contacts.add(contact);
             }
@@ -477,12 +483,12 @@ public class PhoneParaseAdapter extends BaseParseAdapter {
             if(!TextUtils.isEmpty(carrier)){
                 contact.setCarrier(carrier);
             }else{
-                contact.setCarrier("δ֪");
+                contact.setCarrier("未知");
             }
             if(!TextUtils.isEmpty(location)){
                 contact.setLocation(location);
             }else{
-                contact.setLocation("δ֪");
+                contact.setLocation("未知");
             }
             contacts.add(contact);
         }

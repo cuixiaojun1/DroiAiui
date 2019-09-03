@@ -2,6 +2,7 @@ package com.droi.aiui.controler;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.droi.aiui.Interface.OnParseResultTextListener;
 import com.droi.aiui.adapter.AppParseAdapter;
@@ -32,7 +33,7 @@ import java.util.Map;
 
 /**
  * Created by cuixiaojun on 17-12-18.
- * ����ģʽ����json��������ҷ������Ӧ�Ķ���
+ * 单例模式解析json结果，并且返回相对应的对象
  */
 
 public class ParseControler {
@@ -44,7 +45,7 @@ public class ParseControler {
     private BaseParseAdapter mBaseParseAdapter;
     public ArrayList<Message> messageList = new ArrayList<Message>();
 
-    /** ��д�þ���� */
+    /** 听写用句队列 */
     private List<Sentence> mSentences = new ArrayList<Sentence>();
 
     public ParseControler(Context context) {
@@ -56,12 +57,13 @@ public class ParseControler {
     }
 
     /**
-     * ���ݷ��ص�json�ִ��������������
+     * 根据返回的json字串解析语义理解结果
      *
      * @param json
      */
     public String handleNlpResult(String json) {
         String serviceType = getServiceType(json);
+        Log.d(TAG, "[ParseControler][handleNlpResult]serviceType = " + serviceType + ",rc = " + getCloudRc(json));
         if (serviceType != null) {
             switch (getServiceType(json)) {
                 case "openQA":
@@ -82,7 +84,7 @@ public class ParseControler {
                 case "sentenceMaking":
                 case "calc":
                 case "cookbook":
-                case "weather"://Ĭ�Ͻ����������ʴ��
+                case "weather"://默认解析，自由问答库
                 case "LEIQIAO.cyclopedia":
                 case "ZUOMX.queryCapital":
                 case "IFLYTEK.OpenQa":
@@ -93,39 +95,39 @@ public class ParseControler {
                 case "IFLYTEK.radio":
                     mBaseParseAdapter = new OpenQAParseAdapter();
                     break;
-                case "cmd"://���������
+                case "cmd"://命令解析器
                     mBaseParseAdapter = new CmdParseAdapter();
                     break;
-                case "CAPPU.system_settings"://ϵͳ���ü��ܣ����������С����Ļ����,������С
+                case "CAPPU.system_settings"://系统设置技能，包括字体大小，屏幕亮度,声音大小
                     mBaseParseAdapter = new SettingParseAdapter(mContext);
                     break;
-                case "CAPPU.applacition"://Ӧ�ü���
+                case "CAPPU.applacition"://应用技能
                     mBaseParseAdapter = new AppParseAdapter(mContext);
                     break;
-                case "CAPPU.cappu_mms"://���ż���
+                case "CAPPU.cappu_mms"://短信技能
                     mBaseParseAdapter = new MmsParseAdapter(mContext);
                     break;
-                case "scheduleX"://���Ѽ���
+                case "scheduleX"://提醒技能
                     mBaseParseAdapter = new RemindParseAdapter(mContext);
                     break;
-                case "telephone"://�绰���ܣ�Ĭ��ʹ�õ���Ѷ�ɵĿ��ż���
+                case "telephone"://电话技能，默认使用的是讯飞的开放技能
                     mBaseParseAdapter = new PhoneParaseAdapter(mContext);
                     break;
-                case "CAPPU.music_demo"://���ּ��ܣ�Ŀǰֻ֧�ֲ��ű��ز���
+                case "CAPPU.music_demo"://音乐技能，目前只支持播放本地播放
                     mBaseParseAdapter = new MusicParseAdapter(mContext);
                     break;
-                default://Ĭ��
+                default://默认
                     mBaseParseAdapter = new DefaultParseAdapter(mContext);
                     break;
             }
-        } else {//�����ȡ��������Ļ���Ĭ����ʾ��ʶ��
+        } else {//如果获取不到服务的话，默认提示不识别
             mBaseParseAdapter = new DefaultParseAdapter(mContext);
         }
         return returnResult(mBaseParseAdapter,json);
     }
 
     /**
-     * ��ȡ������д���
+     * 获取在线听写结果
      */
     public String getCloudResult(String json){
         String result = null;
@@ -137,7 +139,7 @@ public class ParseControler {
     }
 
     /**
-     * ��ȡ��������
+     * 获取技能类型
      */
     public String getServiceType(String json){
         BaseBean mBaseBean;
@@ -149,14 +151,14 @@ public class ParseControler {
     }
 
     /**
-     * ����json�ִ��ķ����룬���ڶ�Ӧ���߼�����
+     * 解析json字串的返回码，用于对应的逻辑处理
      *
      * "rc"(respond code)
-     *      0 	�����ɹ�
-     *      1 	�����쳣
-     *      2 	ϵͳ�ڲ��쳣
-     *      3 	ҵ�����ʧ�ܣ�������Ϣ��error�ֶ�����
-     *      4 	�ı�û��ƥ��ļ��ܳ��������ܲ������ܴ�����ı�
+     *      0 	操作成功
+     *      1 	输入异常
+     *      2 	系统内部异常
+     *      3 	业务操作失败，错误信息在error字段描述
+     *      4 	文本没有匹配的技能场景，技能不理解或不能处理该文本
      */
     public int getCloudRc(String json){
         int code = -1;
@@ -168,27 +170,28 @@ public class ParseControler {
     }
 
     /**
-     * ��������¼�����
+     * 处理错误事件返回
      * @param event
      */
     public void handleErrorEvent(AIUIEvent event){
         messageList.clear();
         if(event.arg1 == 10118){
-            setMessage(Message.MsgType.TEXT, Message.FromType.ROBOT,"������û��˵��Ŷ��");
+            setMessage(Message.MsgType.TEXT, Message.FromType.ROBOT,"您好像没有说话哦！");
         }else if(event.arg1 == -1){
-            setMessage(Message.MsgType.TEXT, Message.FromType.ROBOT,"��û���������˵�Ļ�������˵һ�Σ�");
+            setMessage(Message.MsgType.TEXT, Message.FromType.ROBOT,"我没有听清楚您说的话，请再说一次！");
         }else if(event.arg1 == 10120){
-            setMessage(Message.MsgType.TEXT, Message.FromType.ROBOT,"�Բ��𣬵�ǰ���粻�ã������ԣ�");
+            setMessage(Message.MsgType.TEXT, Message.FromType.ROBOT,"对不起，当前网络不好，请重试！");
         }
     }
 
     /**
-     * ����AIUI���صĽ��
+     * 处理AIUI返回的结果
      * @param event
      */
     public void handleEventResult(Map<String,String> result,AIUIEvent event){
-        // ��AIUIConstant.KEY_INTENT_ENGINE_TYPE��ΪAIUIConstant.ENGINE_TYPE_MIXED
-        // ���ƶ˺ͱ��ؽ����������򱨴��ɿͻ����Լ�����ȡ�ᡣ
+        // 若AIUIConstant.KEY_INTENT_ENGINE_TYPE设为AIUIConstant.ENGINE_TYPE_MIXED
+        // ，云端和本地结果都会给出或报错，由客户端自己控制取舍。
+        Log.d(TAG,"handleEventResult");
         String bizParams = event.bundle.getString(AIUIConstant.KEY_INFO);
         try {
             JSONObject bizParamsJson = new JSONObject(bizParams);
@@ -201,18 +204,20 @@ public class ParseControler {
                         new String(event.bundle.getByteArray(cnt_id), "utf-8"));
                 String sub = params.optString("sub");
                 if ("iat".equals(sub)) {
-                    // �����õ���д���
+                    // 解析得到听写结果
                     String strResult = cntJson.optString("text");
                     //result.put(AIUIControler.KEY_IAT_RESULT,strResult);
-                    //JeffLog.d("cuixiaojun", "������д========== "+strResult);
+                    //Log.d("cuixiaojun", "在线听写========== "+strResult);
                 } else if ("nlp".equals(sub)) {
-                    // �����õ�������
+                    // 解析得到语义结果
                     String strResult = cntJson.optString("intent");
                     //cloudReturnResult = handleNlpResult(strResult);
                     result.put(AIUIControler.KEY_CLOUD_RESULT,strResult);
+                    Log.d(TAG,"在线结果============ ： "+strResult);
                 } else if ("asr".equals(sub)) {
-                    // �����õ����������ʶ����
+                    // 解析得到本地命令词识别结果
                     String strResult = cntJson.optString("intent");
+                    Log.d(TAG,"本地结果============ ： "+strResult);
                     result.put(AIUIControler.KEY_LOCAL_RESULT,strResult);
                 }
 
@@ -231,15 +236,16 @@ public class ParseControler {
             result = baseParaseAdapter.getSemanticResultText(json);
         }
         if(TextUtils.isEmpty(result)){
-            result = "�Բ�����û�������������˵һ�飡";
+            result = "对不起，我没有听清楚，请再说一遍！";
         }
         return result;
     }
 
     /**
-     * ���÷�����Ϣ
+     * 设置返回消息
      */
-    public void setMessage(Message.MsgType msgType, Message.FromType fromType, String message){
+    public void setMessage(Message.MsgType msgType,Message.FromType fromType,String message){
+        Log.d(TAG,"setMessage---->message = "+message);
         messageList.clear();
         Message temp = new Message();
         temp.msgType = msgType;
@@ -252,13 +258,13 @@ public class ParseControler {
     }
 
     /**
-     * ������д���
+     * 处理听写结果
      */
     public String handleIatResult(String json) {
         try {
             JSONObject joText = new JSONObject(json);
 
-            // �����ı�����
+            // 解析文本内容
             String txt = "";
             JSONArray txtJsonArray = joText.getJSONArray("ws");
             for (int i = 0; i < txtJsonArray.length(); i++) {
@@ -267,31 +273,31 @@ public class ParseControler {
                 txt += cw.getJSONObject(0).getString("w");
             }
 
-            // ��������
+            // 结果的序号
             int sn = joText.getInt("sn");
-            /* ��д��̬���� begin */
+            /* 听写动态修正 begin */
             String pgs = joText.optString("pgs");
-            // �����ʵʱ������̬��������û��pgs�ֶΡ�
+            // 如果非实时上屏动态修正，就没有pgs字段。
             if ("apd".equals(pgs) || TextUtils.isEmpty(pgs)) {
-                /* ��д��̬���� end */
-                // ׷��
+                /* 听写动态修正 end */
+                // 追加
                 Sentence sentence = new Sentence();
                 sentence.mText = txt;
                 sentence.mSns.add(sn);
                 mSentences.add(sentence);
-                /* ��д��̬���� begin */
+                /* 听写动态修正 begin */
             } else if ("rpl".equals(pgs)) {
-                // �滻
-                // ����滻���䣬snΪ��λ
+                // 替换
+                // 结果替换区间，sn为单位
                 JSONArray rgArray = joText.getJSONArray("rg");
                 int rgBegin = rgArray.getInt(0);
                 int rgEnd = rgArray.getInt(1);
-                // ���������䷶Χ�ڵľ���
+                // 查找在区间范围内的句子
                 boolean isFirstFound = false;
                 for (Sentence tmpSentence : mSentences) {
                     for (int tmpSn : tmpSentence.mSns) {
                         if (rgBegin <= tmpSn && rgEnd >= tmpSn) {
-                            // ���ҵ��ĵ�һ���滻����������
+                            // 把找到的第一句替换，其余的清空
                             if (!isFirstFound) {
                                 isFirstFound = true;
                                 tmpSentence.mText = txt;
@@ -304,17 +310,17 @@ public class ParseControler {
                     }
                 }
             }
-            /* ��д��̬���� end */
+            /* 听写动态修正 end */
 
-            // չʾ���
+            // 展示结果
             StringBuilder totalTextBuilder = new StringBuilder();
             for (Sentence tmpSentence : mSentences) {
                 totalTextBuilder.append(tmpSentence.mText);
             }
-            // �Ƿ����һ��
+            // 是否最后一个
             boolean ls = joText.getBoolean("ls");
             if (ls) {
-                // �浽�ȶ����ı��У���վ����
+                // 存到稳定的文本中，清空句队列
                 mSentences.clear();
             }
             String totalText = totalTextBuilder.toString();

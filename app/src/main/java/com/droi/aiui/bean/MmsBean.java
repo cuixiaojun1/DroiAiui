@@ -11,12 +11,12 @@ public class MmsBean extends BaseBean {
     /**
      * category : CAPPU.cappu_mms
      * intentType : custom
-     * query : �����Ÿ�����
-     * query_ws : ������/VI// ��/UH// ����/NPP//
+     * query : 发短信给张三
+     * query_ws : 发短信/VI// 给/UH// 张三/NPP//
      * nlis : true
      * vendor : CAPPU
      * version : 4.0
-     * semantic : [{"entrypoint":"ent","intent":"default_intent","score":1,"slots":[{"begin":4,"end":6,"name":"contact","normValue":"����","value":"����"}]}]
+     * semantic : [{"entrypoint":"ent","intent":"default_intent","score":1,"slots":[{"begin":4,"end":6,"name":"contact","normValue":"张三","value":"张三"}]}]
      * state : null
      */
 
@@ -35,7 +35,7 @@ public class MmsBean extends BaseBean {
          * entrypoint : ent
          * intent : default_intent
          * score : 1
-         * slots : [{"begin":4,"end":6,"name":"contact","normValue":"����","value":"����"}]
+         * slots : [{"begin":4,"end":6,"name":"contact","normValue":"张三","value":"张三"}]
          */
 
         private String intent;
@@ -62,8 +62,8 @@ public class MmsBean extends BaseBean {
              * begin : 4
              * end : 6
              * name : contact
-             * normValue : ����
-             * value : ����
+             * normValue : 张三
+             * value : 张三
              */
 
             private String name;

@@ -8,19 +8,19 @@ import java.util.List;
 
 /**
  * Created by cuixiaojun on 17-12-7.
- * Json�������������
+ * Json结果解析工具类
  */
 
 public class JsonParserUtil {
 
     /**
-     * ����JsonObject����
+     * 解析JsonObject数据
      *
      * @param jsonString
-     *            Json��ʽ�ַ���
+     *            Json格式字符串
      * @param clazz
-     *            ��װ��
-     * @return ����T
+     *            封装类
+     * @return 泛型T
      *
      */
     public static <T> T parseJsonObject(String jsonString, Class<T> clazz) {
@@ -34,14 +34,14 @@ public class JsonParserUtil {
         return t;
     }
     /**
-     * ����JsonArray����
+     * 解析JsonArray数据
      *
      * @param jsonString
-     *              Json��ʽ�ַ���
+     *              Json格式字符串
      * @param clazz
-     *              ��װ��
+     *              封装类
      * @return
-     *              �����������ͼ���
+     *              泛型数据类型集合
      */
     public static <T> List<T> parseArray(String jsonString, Class<T> clazz) {
         List<T> list = new ArrayList<T>();

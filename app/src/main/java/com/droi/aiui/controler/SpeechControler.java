@@ -43,7 +43,7 @@ public class SpeechControler {
     private boolean isSpeaking = false;
     private boolean isSpeakingByRemind = false;
 
-    //�����ϳɳ�ʼ����ɻص����������滹û�г�ʼ����ɾ���������
+    //语音合成初始化完成回调，避免引擎还没有初始化完成就语音播报
     private IOnSynthesizerInitComplete iOnSynthesizerInitComplete;
 
     public static final int START = 0;
@@ -72,14 +72,14 @@ public class SpeechControler {
     }
 
     /**
-     * ��ȡ�����ϳɻص�����
+     * 获取语音合成回调监听
      */
     public SynthesizerListener.Stub getSynthesizerListener(){
         return mSynthesizerListener;
     }
 
     /**
-     * �����ϳɻص�������
+     * 语音合成回调监听。
      */
     private SynthesizerListener.Stub mSynthesizerListener = new SynthesizerListener.Stub() {
 
@@ -152,6 +152,7 @@ public class SpeechControler {
     }
 
     public void startSpeech(String speechstr) {
+        Log.d(TAG,"startSpeech--->speechstr = "+speechstr);
         synchronized (this) {
             mTtsParamsIntent.putExtra(TextToSpeech.KEY_PARAM_ROLE_CN, mSpeaker);
             /*if(!isAudioActive()){
@@ -200,7 +201,7 @@ public class SpeechControler {
     }
 
     /**
-     * ��ȡ�����ϳɲ���
+     * 获取语音合成参数
      */
     public Intent getTtsInitParams() {
         Intent ttsIntent = new Intent();
@@ -225,6 +226,7 @@ public class SpeechControler {
     }
 
     public static void setSpeaker(Context context, String speaker) {
+        Log.d(TAG,"setSpeaker---->speaker = "+speaker);
         Settings.Global.putString(context.getContentResolver(), SPEAKER_KEY, speaker);
     }
 

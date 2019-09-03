@@ -3,6 +3,7 @@ package com.droi.aiui.adapter;
 import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.droi.aiui.bean.Contact;
 import com.droi.aiui.bean.MmsBean;
@@ -30,15 +31,16 @@ public class MmsParseAdapter extends BaseParseAdapter {
     public String getSemanticResultText(String json) {
         mmsBean = JsonParserUtil.parseJsonObject(json, MmsBean.class);
         allContacts = DataControler.getInstance(mContext).loadAllContacts();
+        Log.d(TAG,"allContacts.size = "+allContacts.size());
         String result = handleResult();
         if(TextUtils.isEmpty(result)){
-            result = "�����ڻ�������������ʱ�������������˼��";
+            result = "我现在还不够聪明，暂时不能理解您的意思！";
         }
         return result;
     }
 
     /**
-     * �������ҵ��
+     * 处理短信业务
      */
     private String handleResult(){
         String result;
@@ -46,7 +48,7 @@ public class MmsParseAdapter extends BaseParseAdapter {
         if(!TextUtils.isEmpty(name)){
             final String phoneNumber = getPhoneNumberByName(allContacts,name);
             if(!TextUtils.isEmpty(phoneNumber)){
-                result = "���ڷ����Ÿ�"+name;
+                result = "正在发短信给"+name;
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -54,16 +56,16 @@ public class MmsParseAdapter extends BaseParseAdapter {
                     }
                 },3000);
             }else{
-                result = "��Ҫ�����ŵ���ϵ���ֻ�����Ϊ�գ���ȷ��֮�������³��ԣ�";
+                result = "您要发短信的联系人手机号码为空，请确认之后再重新尝试！";
             }
         }else{
-            result = "��Ҫ�����ŵ���ϵ�˲����ڣ���ȷ��֮�������³��ԣ�";
+            result = "你要发短信的联系人不存在，请确认之后再重新尝试！";
         }
         return result;
     }
 
     /**
-     * ͨ�������õ���ϵ�˵�����
+     * 通过解析得到联系人的名称
      */
     private String getContactNameByMmsBean(){
         String name = null;
@@ -80,7 +82,7 @@ public class MmsParseAdapter extends BaseParseAdapter {
     }
 
     /**
-     * ͨ����ϵ�����ƻ�ȡ��ϵ�˵绰����
+     * 通过联系人名称获取联系人电话号码
      */
     public String getPhoneNumberByName(List<Contact> contacts, String name) {
         String phoneNumber = null;

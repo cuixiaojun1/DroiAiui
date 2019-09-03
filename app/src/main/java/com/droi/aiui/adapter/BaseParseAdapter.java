@@ -6,5 +6,6 @@ package com.droi.aiui.adapter;
  */
 
 public abstract class BaseParseAdapter{
+    //返回语义理解结果文本
     public abstract String getSemanticResultText(String json);
 }

@@ -23,9 +23,9 @@ public class HelpFragment extends BaseFragment implements CappuHelpListAdapter.I
 
     private final String TAG = "HelpFragment";
     private DroiAiuiMainActivity mActivity;
-    private String[] helpListItemTitles = {"������", "��绰", "��Ӧ��", "������", "���ֺ�", "������", "������", "������" ,"������"};
-    private String[] helpListItemContents1 = {"�����������ô��?", "��绰������",  "������Ϣ", "��������3�������ҳ�ҩ", "���æ��С����", "������Ļ����",  "��������", "����������죿" ,"�������׸�"};
-    private String[] helpListItemContents2 = {"���������������ô��?", "����10086",  "��΢��", "��������9�����������", "���æ��������", "������Ļ����",  "��������", "���괺���Ǽ��ţ�","�������������"};
+    private String[] helpListItemTitles = {"查天气", "打电话", "打开应用", "设提醒", "调字号", "调亮度", "调音量", "查日期" ,"听音乐"};
+    private String[] helpListItemContents1 = {"今天的天气怎么样?", "打电话给儿子",  "进入信息", "今天下午3点提醒我吃药", "请帮忙减小字体", "降低屏幕亮度",  "增大音量", "端午节是哪天？" ,"我想听首歌"};
+    private String[] helpListItemContents2 = {"北京明天的天气怎么样?", "拨打10086",  "打开微信", "明天上午9点提醒我买菜", "请帮忙调大字体", "调高屏幕亮度",  "降低声音", "今年春节是几号？","播放最炫民族风"};
 
     private List<CappuHelpListItemData> helpListItemGetData;
     private final int MSG_PLAY_ANIMATION = 0;
@@ -119,7 +119,7 @@ public class HelpFragment extends BaseFragment implements CappuHelpListAdapter.I
         }
     }
 
-    //��ʼ���Ŷ���
+    //开始播放动画
     private void startAnimation(final int position, int id){
         for (int i = 0; i < animationStates.size(); i++) {
             animationStates.get(i).setOne_state(false);
@@ -143,7 +143,7 @@ public class HelpFragment extends BaseFragment implements CappuHelpListAdapter.I
         listViewAdapter.notifyDataSetChanged();
     }
 
-    //ֹͣ���Ŷ���
+    //停止播放动画
     private void stopAnimation() {
         for (int i = 0; i < animationStates.size(); i++) {
             animationStates.get(i).setOne_state(false);

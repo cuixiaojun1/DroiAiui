@@ -3,6 +3,7 @@ package com.droi.aiui.adapter;
 import android.content.Context;
 import android.os.RemoteException;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.droi.aiui.AiuiManager;
 import com.droi.aiui.bean.MusicBean;
@@ -39,12 +40,10 @@ public class MusicParseAdapter extends BaseParseAdapter {
     private Context mContext;
     private List<Song> allSongs;
     private MusicBean mMusicBean;
-    //private IMediaPlaybackService mMusicService;
 
     public MusicParseAdapter(Context context) {
         mContext = context;
         allSongs = DataControler.getInstance(context).loadAllSongs();
-        //mMusicService = AiuiManager.getInstance(context).getMusicService();
     }
 
     @Override
@@ -54,7 +53,7 @@ public class MusicParseAdapter extends BaseParseAdapter {
     }
 
     /**
-     * ��ȡ���ֲ�����ͼ
+     * 获取音乐播放意图
      */
     private String getPlayIntent(){
         if(mMusicBean != null){
@@ -72,9 +71,10 @@ public class MusicParseAdapter extends BaseParseAdapter {
     }
 
     /**
-     * ��ȡ�����ľ�����Ϣ���������ֵ����ƺ͸���������
+     * 获取歌曲的具体信息，包括歌手的名称和歌曲的名称
      */
     private String getSongInfoFromServerByType(String type){
+        Log.d(TAG,"[MusicParseAdapter][getSongInfoFromServerByType]type = "+type);
         if(mMusicBean != null){
             List<MusicBean.SemanticBean> semantic = mMusicBean.getSemantic();
             if(semantic != null && semantic.size() >0) {
@@ -100,39 +100,47 @@ public class MusicParseAdapter extends BaseParseAdapter {
     }
 
     /**
-     * ���������ͼ
+     * 处理歌曲意图
      */
     private String handlePlayIntent(String intent){
+        Log.d(TAG,"[MusicParseAdapter][handlePlayIntent]intent = "+intent);
         String result = null;
         if(intent != null){
             switch (intent){
                 case PLAY_TYPE_RANDOM:
+                    Log.d(TAG,"[MusicParseAdapter][handlePlayIntent]PLAY_TYPE_RANDOM--->size = "+allSongs.size());
                     result = playSongByRandom(allSongs);
                     break;
                 case PLAY_TYPE_STYLE:
                     String style = getSongInfoFromServerByType(TYPE_STYLE);
                     List<Song> songs = getSongsByType(allSongs,style);
                     result = playSongByRandom(songs);
+                    Log.d(TAG,"[MusicParseAdapter][handlePlayIntent]PLAY_TYPE_STYLE--->style = "+style+",size = "+songs.size());
                     break;
                 case PLAY_TYPE_SONG:
                     String name = getSongInfoFromServerByType(TYPE_NAME);
                     String singer = getSongInfoFromServerByType(TYPE_SINGER);
                     result = playSongByName(name,singer);
+                    Log.d(TAG,"[MusicParseAdapter][handlePlayIntent]PLAY_TYPE_SONG--->name = "+name+",singer = "+singer);
                     break;
                 case PLAY_TYPE_SINGER:
                     String singer1 = getSongInfoFromServerByType(TYPE_SINGER);
                     List<Song> songs1 = getSongsBySinger(allSongs,singer1);
+                    Log.d(TAG,"[MusicParseAdapter][handlePlayIntent]PLAY_TYPE_SINGER--->singer1 = "+singer1+",size = "+songs1.size());
                     result = playSongByRandom(songs1);
                     break;
                 case PLAY_TYPE_PREV:
                     //result = playSongToNext(false);
+                    Log.d(TAG,"[MusicParseAdapter][handlePlayIntent]PLAY_TYPE_PREV");
                     break;
                 case PLAY_TYPE_NEXT:
                     //result = playSongToNext(true);
+                    Log.d(TAG,"[MusicParseAdapter][handlePlayIntent]PLAY_TYPE_NEXT");
                     break;
                 case PLAY_TYPE_PAUSE:
                 case PLAY_TYPE_STOP:
                     //result = stopPlaySong();
+                    Log.d(TAG,"[MusicParseAdapter][handlePlayIntent]PLAY_TYPE_STOP");
                     break;
                     default:
                         break;
@@ -142,71 +150,59 @@ public class MusicParseAdapter extends BaseParseAdapter {
     }
 
     /**
-     * �������ĳ���͸����������и�������ĳ�����ֵ����и���
-     * ���ܰ���ĳ�����͵ĸ�����ȫ��������ĳ���ֵĸ���
+     * 随机播放某类型歌曲或者所有歌曲或者某个歌手的所有歌曲
+     * 可能包含某种类型的歌曲，全部歌曲，某歌手的歌曲
      */
     private String playSongByRandom(List<Song> songs){
-        String result = null;
+        Log.d(TAG,"[MusicParseAdapter][playSongByRandom]allSongsSize = "+allSongs.size());
+        String result;
         if(songs != null && songs.size() > 0){
             long[] playList = FunctionUtil.getPlayList(songs);
             Random random = new Random();
             int position = random.nextInt(playList.length);
             String name = songs.get(position).getTitle();
-            /*if(mMusicService != null){
-                FunctionUtil.playMusicByList(mMusicService,playList,position);
-                result = "����Ϊ������"+name;
-            }else{
-                result = "���ַ����ʼ��ʧ�ܣ������³��ԣ�";
-            }*/
+            result = "音乐服务初始化失败，请重新尝试！";
         }else{
-            result = "�Բ���û���������ֻ�����ҵ������������֮�����ԣ�";
+            result = "对不起，没有在您的手机里边找到歌曲，请添加之后重试！";
         }
         return result;
     }
 
     /**
-     * �������
+     * 随机歌曲
      */
     private String playSongByName(String songName,String singer){
-        String result = null;
+        Log.d(TAG,"[playSongByName]songName = "+songName+",singer = "+singer);
+        String result;
         if(allSongs != null && allSongs.size() > 0){
             if(!TextUtils.isEmpty(singer)){
-                if(isSingerExisted(allSongs,singer)){//�жϸ����Ƿ����
-                    if(isSongNameExisted(allSongs,songName)){//�жϸ����Ƿ����
-                        /*if(mMusicService != null){
-                            result = "����Ϊ������"+singer+"��"+songName+"!";
-                            playMusicByName(mMusicService,songName);
-                        }else{
-                            result = "���ַ����ʼ��ʧ�ܣ������³��ԣ�";
-                        }*/
+                if(isSingerExisted(allSongs,singer)){//判断歌手是否存在
+                    if(isSongNameExisted(allSongs,songName)){//判断歌曲是否存在
+                        result = "音乐服务初始化失败，请重新尝试！";
                     }else{
-                        result = "û���ҵ�"+singer+"��"+songName+"����������ĸ��ֵĸ�����";
+                        result = "没有找到"+singer+"的"+songName+"，请听听别的歌手的歌曲！";
                     }
                 }else {
-                    result = "û���ҵ�"+singer+"��صĸ�������������ĸ��ֵĸ�����";
+                    result = "没有找到"+singer+"相关的歌曲，请听听别的歌手的歌曲！";
                 }
             }else{
-                if(isSongNameExisted(allSongs,songName)){//�жϸ����Ƿ����
-                    /*if(mMusicService != null){
-                        result = "����Ϊ������"+songName+"!";
-                        playMusicByName(mMusicService,songName);
-                    }else{
-                        result = "���ַ����ʼ��ʧ�ܣ������³��ԣ�";
-                    }*/
+                if(isSongNameExisted(allSongs,songName)){//判断歌曲是否存在
+                    result = "音乐服务初始化失败，请重新尝试！";
                 }else{
-                    result = "û���ҵ�����"+songName+"��������������ĸ�����";
+                    result = "没有找到歌曲"+songName+"，您可以听听别的歌曲！";
                 }
             }
         }else{
-            result = "û���������ֻ����ҵ������������֮�����³��ԣ�";
+            result = "没有在您的手机中找到歌曲，请添加之后重新尝试！";
         }
         return result;
     }
 
     /**
-     * ���Ÿ���
-     *//*
-    private void playMusicByName(IMediaPlaybackService mMusicService,String songName){
+     * 播放歌曲
+     */
+    /*private void playMusicByName(String songName){
+        Log.d(TAG,"[MusicParseAdapter][playMusicByName]mMusicService = "+mMusicService+",songPath = "+songName);
         long[] playList = FunctionUtil.getPlayList(allSongs);
         long songId = 0;
         int position = 0;
@@ -220,20 +216,23 @@ public class MusicParseAdapter extends BaseParseAdapter {
                 position = i;
             }
         }
-        FunctionUtil.playMusicByList(mMusicService,playList,position);
+        FunctionUtil.playMusicByList(playList,position);
     }*/
 
 
     /**
-     * �������
+     * 随机歌曲
      */
     /*private String playSongToNext(boolean isNext){
         String result = null;
         if(mMusicService != null) try {
             long[] queue = mMusicService.getQueue();
             int queuePosition = mMusicService.getQueuePosition();
-            int repeatMode = mMusicService.getRepeatMode();//1  ����ѭ�� //0������� //2˳�򲥷�
+            int repeatMode = mMusicService.getRepeatMode();//1  单曲循环 //0随机播放 //2顺序播放�
+            Log.d(TAG, "[MusicParseAdapter][playSongToNext]queue = " + queue
+                    + ",queuePosition = " + queuePosition+",repeatMode = "+repeatMode);
             if (queue != null && queue.length > 0) {
+                Log.d(TAG, "[MusicParseAdapter][playSongToNext]queue.size = "+queue.length);
                 if (isNext) {
                     if(repeatMode == 0){
                         Random random = new Random();
@@ -261,34 +260,34 @@ public class MusicParseAdapter extends BaseParseAdapter {
                         songName = getSongName(queue[queuePosition - 1]);
                     }
                     if (!TextUtils.isEmpty(songName)) {
-                        result = "����Ϊ������" + songName + "!";
+                        result = "即将为您播放" + songName + "!";
                         if (isNext) {
                             FunctionUtil.playMusicByList(mMusicService, queue, queuePosition + 1);
                         } else {
                             FunctionUtil.playMusicByList(mMusicService, queue, queuePosition - 1);
                         }
                     } else {
-                        result = "�Բ���û���ҵ��ø�����������������ĸ�����";
+                        result = "对不起，没有找到该歌曲，您可以听听别的歌曲！";
                     }
                 } else {
-                    result = "û���������ֻ����ҵ������������֮�����³��ԣ�";
+                    result = "没有在您的手机中找到歌曲，请添加之后重新尝试！";
                 }
             } else if (allSongs != null && allSongs.size() > 0) {
                 result = playSongByRandom(allSongs);
             } else {
-                result = "û���������ֻ����ҵ������������֮�����³��ԣ�";
+                result = "没有在您的手机中找到歌曲，请添加之后重新尝试！";
             }
         } catch (RemoteException e) {
             e.printStackTrace();
         }
         else{
-            result = "���ַ����ʼ��ʧ�ܣ����Ժ����ԣ�";
+            result = "音乐服务初始化失败，请稍后再试！";
         }
         return result;
     }*/
 
     /**
-     * ͨ������id��ȡ��������
+     * 通过歌曲id获取歌曲名称
      */
     private String getSongName(long songId){
         for (int i = 0; i <allSongs.size(); i++) {
@@ -300,29 +299,30 @@ public class MusicParseAdapter extends BaseParseAdapter {
     }
 
     /**
-     * ��ͣ���Ÿ���
+     * 暂停播放歌曲
      */
     /*private String stopPlaySong(){
         String result;
         if(mMusicService != null){
-            result = "�õģ����Ҿ���ֹͣ�����ˣ������������ʱ���ٸ����Ұɣ�";
+            result = "好的，那我就先停止播放了，等您想听歌的时候再告诉我吧！";
             FunctionUtil.stopPlaySong(mMusicService);
         }else{
-            result = "���ַ����ʼ��ʧ�ܣ����Ժ����ԣ�";
+            result = "音乐服务初始化失败，请稍后再试！";
         }
 
         return result;
     }*/
 
     /**
-     * ͨ���������ͻ�ȡ��ص����и���
+     * 通过歌曲类型获取相关的所有歌曲
      * @return
      */
     private List<Song> getSongsByType(List<Song> allSongs,String type){
+        Log.d(TAG,"[MusicParseAdapter][getSongsByType]allSize = "+allSongs.size()+",type = "+type);
         List<Song> songs = new ArrayList<>();
         for (int i = 0; i < allSongs.size(); i++) {
             Song song = allSongs.get(i);
-            if(song.getFileUrl().contains(type)){//��ȡ�������͸���
+            if(song.getFileUrl().contains(type)){//获取所有类型歌曲
                 songs.add(song);
             }
         }
@@ -330,14 +330,15 @@ public class MusicParseAdapter extends BaseParseAdapter {
     }
 
     /**
-     * ͨ���������ͻ�ȡ��ص����и���
+     * 通过歌曲类型获取相关的所有歌曲
      * @return
      */
     private List<Song> getSongsBySinger(List<Song> allSongs,String singer){
+        Log.d(TAG,"[MusicParseAdapter][getSongsByType]allSize = "+allSongs.size()+",singer = "+singer);
         List<Song> songs = new ArrayList<>();
         for (int i = 0; i < allSongs.size(); i++) {
             Song song = allSongs.get(i);
-            if(song.getSinger().contains(singer)){//��ȡ�������͸���
+            if(song.getSinger().contains(singer)){//获取所有类型歌曲
                 songs.add(song);
             }
         }
@@ -345,7 +346,7 @@ public class MusicParseAdapter extends BaseParseAdapter {
     }
 
     /**
-     * ͨ���������ƻ�ȡ���ֵĲ���·��
+     * 通过音乐名称获取音乐的播放路径
      */
     private String getSongPathByName(List<Song> allSongs,String songName){
         if(allSongs != null && allSongs.size() > 0){
@@ -359,7 +360,7 @@ public class MusicParseAdapter extends BaseParseAdapter {
     }
 
     /**
-     * ͨ���������ƺ͸������ƻ�ȡ���ֵĲ���·��
+     * 通过音乐名称和歌手名称获取音乐的播放路径
      */
     private String getSongPathByNameAndSinger(List<Song> allSongs,String songName,String singer){
         for (int i = 0; i <allSongs.size(); i++) {
@@ -371,9 +372,10 @@ public class MusicParseAdapter extends BaseParseAdapter {
     }
 
     /**
-     * �жϸ����Ƿ����
+     * 判断歌手是否存在
      */
     private boolean isSongNameExisted(List<Song> allSongs,String songName){
+        Log.d(TAG,"[MusicParseAdapter][isExisted]songName = "+songName);
         for (int i = 0; i <allSongs.size(); i++) {
             Song song = allSongs.get(i);
             if(song.getTitle().contains(songName)){
@@ -384,9 +386,10 @@ public class MusicParseAdapter extends BaseParseAdapter {
     }
 
     /**
-     * �жϸ����Ƿ����
+     * 判断歌手是否存在
      */
     private boolean isSingerExisted(List<Song> allSongs,String singer){
+        Log.d(TAG,"[MusicParseAdapter][isExisted]singer = "+singer);
         for (int i = 0; i <allSongs.size(); i++) {
             Song song = allSongs.get(i);
             if(song.getSinger().contains(singer)){

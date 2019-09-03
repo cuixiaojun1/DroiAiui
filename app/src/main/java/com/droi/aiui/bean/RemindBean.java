@@ -9,9 +9,9 @@ import java.util.List;
 public class RemindBean extends BaseBean {
 
     /**
-     * semantic : [{"intent":"CREATE","slots":[{"name":"content","value":"��"},{"name":"datetime","value":"����8��","normValue":"{\"datetime\":\"T08:00:00\",\"suggestDatetime\":\"2018-03-22T08:00:00\"}"},{"name":"name","value":"clock"},{"name":"repeat","value":"EVERYDAY"}]}]
+     * semantic : [{"intent":"CREATE","slots":[{"name":"content","value":"起床"},{"name":"datetime","value":"早上8点","normValue":"{\"datetime\":\"T08:00:00\",\"suggestDatetime\":\"2018-03-22T08:00:00\"}"},{"name":"name","value":"clock"},{"name":"repeat","value":"EVERYDAY"}]}]
      * used_state : {"content":"1","datetime.INTERVAL":"1","datetime.time":"1","name":"1","operation":"1","param:repeat_key":"1","state":"clockFinished","state_key":"fg::scheduleX::default::clockFinished"}
-     * answer : {"text":"�õģ�ÿ������8���Ҷ���������"}
+     * answer : {"text":"好的，每天早上8点我都会提醒您"}
      */
 
     private UsedStateBean used_state;
@@ -60,7 +60,7 @@ public class RemindBean extends BaseBean {
     public static class SemanticBean {
         /**
          * intent : CREATE
-         * slots : [{"name":"content","value":"��"},{"name":"datetime","value":"����8��","normValue":"{\"datetime\":\"T08:00:00\",\"suggestDatetime\":\"2018-03-22T08:00:00\"}"},{"name":"name","value":"clock"},{"name":"repeat","value":"EVERYDAY"}]
+         * slots : [{"name":"content","value":"起床"},{"name":"datetime","value":"早上8点","normValue":"{\"datetime\":\"T08:00:00\",\"suggestDatetime\":\"2018-03-22T08:00:00\"}"},{"name":"name","value":"clock"},{"name":"repeat","value":"EVERYDAY"}]
          */
 
         private String intent;
@@ -85,7 +85,7 @@ public class RemindBean extends BaseBean {
         public static class SlotsBean {
             /**
              * name : content
-             * value : ��
+             * value : 起床
              * normValue : {"datetime":"T08:00:00","suggestDatetime":"2018-03-22T08:00:00"}
              */
 

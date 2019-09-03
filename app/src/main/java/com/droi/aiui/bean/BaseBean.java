@@ -2,20 +2,20 @@ package com.droi.aiui.bean;
 
 /**
  * Created by cuixiaojun on 17-12-18.
- *  ���࣬��Ҫ���ڴ�ż�������
+ *  基类，主要用于存放技能类型
  */
 
 public class BaseBean {
 
-    //��������
+    //服务类型
     private String service;
-    //������
+    //返回码
     private int rc;
     //uuid
     private String uuid;
     //sid
     private String sid;
-    //��д�ı�
+    //听写文本
     private String text;
 
     public String getUuid() {

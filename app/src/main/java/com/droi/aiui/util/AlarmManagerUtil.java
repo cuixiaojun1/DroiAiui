@@ -32,7 +32,7 @@ public class AlarmManagerUtil {
     public static final int REPEAT_TYPE_WEEKEND = 6;
 
     /**
-     * ȡ����Ӧ������
+     * 取消对应的闹钟
      * @param context
      * @param action
      */
@@ -46,14 +46,14 @@ public class AlarmManagerUtil {
     }
 
     /**
-     * @param weekType ����������͵����ڼ�
-     * @param dateTime �������ʱ��������õ����������+��ѡ���������ʱ���룩
-     * @return ������ʼ����ʱ���ʱ���
+     * @param weekType 传入的是整型的星期几
+     * @param dateTime 传入的是时间戳（设置当天的年月日+从选择框拿来的时分秒）
+     * @return 返回起始闹钟时间的时间戳
      * Calculate the alarm time
      */
     public static long calculateAlarmTime(int weekType, long dateTime) {
         long time = 0;
-        //weekflag == 0��ʾ�ǰ���Ϊ�����Ե�ʱ����������һ���еģ�weekfalg��0ʱ��ʾÿ�ܼ������Ӳ�����Ϊʱ����
+        //weekflag == 0表示是按天为周期性的时间间隔或者是一次行的，weekfalg非0时表示每周几的闹钟并以周为时间间隔
         if (weekType != 0) {
             Calendar c = Calendar.getInstance();
             int week = c.get(Calendar.DAY_OF_WEEK)-1;
@@ -82,7 +82,7 @@ public class AlarmManagerUtil {
         return time;
     }
     /**
-     * ��ȡ���ѵ��ظ�����
+     * 获取提醒的重复周期
      * @param begin
      * @param end
      * @return
@@ -107,16 +107,16 @@ public class AlarmManagerUtil {
     }
 
     /**
-     * ��������
+     * 设置提醒
      * @param remindInfo
      */
     public static void setRealAlarm(Context context, RemindInfo remindInfo, long intervalMillis, int id) {
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        //�õ�����ʵ������Ҫ��Ϊ������Ļ�ȡʱ��
+        //得到日历实例，主要是为了下面的获取时间
         Calendar calendar = Calendar.getInstance();
-        //������������ʱ�䣬��Ҫ���������������պ͵�ǰͬ��
+        //是设置日历的时间，主要是让日历的年月日和当前同步
         calendar.setTimeInMillis(System.currentTimeMillis());
-        // ����ʱ����Ҫ����һ�£���Ȼ���ܸ����ֻ�����8��Сʱ��ʱ���
+        // 这里时区需要设置一下，不然可能个别手机会有8个小时的时间差
         calendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
         Intent intent = new Intent(context, RemindReciver.class);
         Bundle bundle = new Bundle();
@@ -125,20 +125,21 @@ public class AlarmManagerUtil {
         intent.setAction(remindInfo.getTime()+remindInfo.getRepeatDate());
         PendingIntent sender = PendingIntent.getBroadcast(context, id, intent, 0);
         if(remindInfo.getRepeatDate().equals("ONETIME")){
-            Log.d("TAG","���õ�������--->remindInfo = "+remindInfo.toString()+printTime(remindInfo.getTime()));
+            Log.d("TAG","设置单次闹钟--->remindInfo = "+remindInfo.toString()+printTime(remindInfo.getTime()));
             am.set(AlarmManager.RTC_WAKEUP, remindInfo.getTime(), sender);
         }else{
-            Log.d(TAG,"�����ظ�����--->remindInfo = "+remindInfo.toString()+printTime(remindInfo.getTime())+",���ʱ�� = "+intervalMillis/3600000+"Сʱ");
+            Log.d(TAG,"设置重复闹钟--->remindInfo = "+remindInfo.toString()+printTime(remindInfo.getTime())+",间隔时间 = "+intervalMillis/3600000+"小时");
             am.setRepeating(AlarmManager.RTC_WAKEUP, remindInfo.getTime(), intervalMillis, sender);
         }
     }
 
     /**
-     * ��ȡ�ַ���
+     * 获取字符串
      * @param repeatDate
      * @return
      */
     public static int getWeekStart(String repeatDate,String type){
+        Log.d(TAG,"getWeekStart--->repeatDate = "+repeatDate);
         Pattern p = Pattern.compile("\\d+");
         Matcher matcher;
         String[] temp;
@@ -160,7 +161,7 @@ public class AlarmManagerUtil {
     }
 
     /**
-     * ��ȡ�����ظ�������
+     * 获取闹钟重复的类型
      */
     public static int getRepeatType(String repeatDate){
         if(repeatDate.equals("ONETIME")){
@@ -179,7 +180,7 @@ public class AlarmManagerUtil {
     }
 
     /**
-     * ��ӡ����ʱ��
+     * 打印提醒时间
      */
     public static String printTime(long time){
         return FunctionUtil.longToString(time,FunctionUtil.TIME_FORMATE1);

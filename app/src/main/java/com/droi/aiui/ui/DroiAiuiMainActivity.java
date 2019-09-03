@@ -36,7 +36,7 @@ import java.util.List;
 
 /**
  * Created by cuixiaojun on 17-12-28.
- * AIUI������
+ * AIUI主界面
  */
 
 public class DroiAiuiMainActivity extends Activity implements View.OnTouchListener, View.OnClickListener, FragmentManageImpl.IManageFragment, OnParseResultTextListener {
@@ -45,20 +45,20 @@ public class DroiAiuiMainActivity extends Activity implements View.OnTouchListen
 
     private TextView mainHelpBtn, mainRemindBtn, mainHelpBtnText, mainRemindBtnText;
     private ImageView mSpeechButton;
-    /*����ʶ�������*/
+    /*语音识别控制器*/
     public AiuiManager mAiuiManager;
-    /*fragment������*/
+    /*fragment管理器*/
     private FragmentManageImpl fragmentManageImp;
-    /*������д�Ի���*/
+    /*语音听写对话框*/
     private SpeechDialogView mSpeechDialogView;
-    /*����ɾ���ص��ӿ�*/
+    /*提醒删除回调接口*/
     private IOnRemindCancelClickListener onRemindCancelClickListener;
-    /*������ջص��ӿ�*/
+    /*结果接收回调接口*/
     private IOnParseListener onParseListener;
 
     private SpeechControler mSpeechControler;
 
-    /* ��ȡ�ٶ�λ����Ϣ*/
+    /* 获取百度位置信息*/
     public LocationClient mLocationClient = null;
     private MyLocationListener myListener;
     private LocationClientOption locationClientOption;
@@ -70,43 +70,43 @@ public class DroiAiuiMainActivity extends Activity implements View.OnTouchListen
         super.onCreate(savedInstanceState);
         Log.d(TAG, "[CappuAiuiActivity][onCreate]");
         setContentView(R.layout.cappu_main_activity);
-
+        //检查版本更新
         UpdateChecker.checkForDialog(this);
-        //�����˱���log
+        //打开友盟报错log
         UMConfigure.setLogEnabled(true);
 
-        /*����Activityȫ����ʾ*/
+        /*设置Activity全屏显示*/
         StatusBarUtils.fullScreen(this);
-        //������Ƶ������Ϊ��ý������
+        //设置音频流类型为多媒体类型
         this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        /* ��ʼ��fragment������*/
+        /* 初始化fragment管理器*/
         fragmentManageImp = new FragmentManageImpl(this, this);
 
-        /* ��ʼ��AIUI������ */
+        /* 初始化AIUI管理类 */
         mAiuiManager = AiuiManager.getInstance(getApplicationContext());
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mSpeechControler = mAiuiManager.getSpeechControler();
-        /* �ٶȶ�λ */
+        /* 百度定位 */
         mLocationClient = new LocationClient(getApplicationContext());
-        //����LocationClient��
+        //声明LocationClient类
         locationClientOption = new LocationClientOption();
-        //���ðٶȶ�λ����
+        //设置百度定位参数
         setLocationParams();
         myListener = new MyLocationListener();
-        //ע���������
+        //注册监听函数
         mLocationClient.registerLocationListener(myListener);
 
-        /* ע�������仯�ص��ӿ�*/
+        /* 注册音量变化回调接口*/
         mAiuiManager.getAIUIControler().setOnVolumeChangedListener(myOnVolumeChangedListener);
-        /* ע���������ص��ӿ�*/
+        /* 注册结果解析回调接口*/
         mAiuiManager.getAIUIControler().getParseControler().setOnParseResultTextListener(this);
 
-        /* Ĭ����ʾfragment*/
+        /* 默认显示fragment*/
         fragmentManageImp.showFragment(1);
 
-        /* ��ʼ���Ի�view*/
+        /* 初始化对话view*/
         mSpeechDialogView = new SpeechDialogView(this);
-        /*��ʼ����ͼ*/
+        /*初始化视图*/
         initView();
     }
 
@@ -114,9 +114,9 @@ public class DroiAiuiMainActivity extends Activity implements View.OnTouchListen
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onResume");
-        //�������˱�����Ϣץȡ
+        //设置友盟报错信息抓取
         MobclickAgent.onResume(this);
-        //��ʼ�ٶȶ�λ
+        //开始百度定位
         if (mLocationClient != null) {
             mLocationClient.start();
         }
@@ -129,7 +129,7 @@ public class DroiAiuiMainActivity extends Activity implements View.OnTouchListen
     public void onPause() {
         super.onPause();
         Log.d(TAG, "onPause");
-        //�������˱�����Ϣץȡ
+        //设置友盟报错信息抓取
         MobclickAgent.onPause(this);
         if (mSpeechControler != null && mSpeechControler.isSpeaking()) {
             mSpeechControler.stopSpeech();
@@ -140,7 +140,7 @@ public class DroiAiuiMainActivity extends Activity implements View.OnTouchListen
     }
 
     /**
-     * ��ͼ��ʼ��
+     *视图初始化
      */
     private void initView() {
         mainHelpBtn = (TextView) findViewById(R.id.mainHelpBtn);
@@ -278,7 +278,7 @@ public class DroiAiuiMainActivity extends Activity implements View.OnTouchListen
     }
 
     /**
-     * ������Ϣ�ص�
+     * 接受消息回调
      *
      * @param messages
      */
@@ -298,76 +298,76 @@ public class DroiAiuiMainActivity extends Activity implements View.OnTouchListen
     }
 
     /**
-     * �ٶ�λ�ñ仯�ص��ӿ�
+     *百度位置变化回调接口
      */
     public class MyLocationListener extends BDAbstractLocationListener {
         @Override
         public void onReceiveLocation(BDLocation location) {
-            //�˴���BDLocationΪ��λ�����Ϣ�࣬ͨ�����ĸ���get�����ɻ�ȡ��λ��ص�ȫ�����
-            //����ֻ�оٲ��ֻ�ȡ��γ����أ����ã��Ľ����Ϣ
-            //��������Ϣ��ȡ˵�����������ο���BDLocation���е�˵��
-            double latitude = location.getLatitude();    //��ȡγ����Ϣ
-            double longitude = location.getLongitude();    //��ȡ������Ϣ
-            float radius = location.getRadius();    //��ȡ��λ���ȣ�Ĭ��ֵΪ0.0f
-            //��ȡ��ǰ����
+            //此处的BDLocation为定位结果信息类，通过它的各种get方法可获取定位相关的全部结果
+            //以下只列举部分获取经纬度相关（常用）的结果信息
+            //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
+            double latitude = location.getLatitude();    //获取纬度信息
+            double longitude = location.getLongitude();    //获取经度信息
+            float radius = location.getRadius();    //获取定位精度，默认值为0.0f
+            //获取当前城市
             String city = location.getCity();
-            //��ȡ��γ���������ͣ���LocationClientOption�����ù�����������Ϊ׼
+            //获取经纬度坐标类型，以LocationClientOption中设置过的坐标类型为准
             String coorType = location.getCoorType();
-            //��ȡ��λʧ����
+            //获取定位失败码
             int errorCode = location.getLocType();
-            //��ȡ��λ���͡���λ���󷵻��룬������Ϣ�ɲ�����ο���BDLocation���е�˵��
+            //获取定位类型、定位错误返回码，具体信息可参照类参考中BDLocation类中的说明
 
             if (latitude != 0 && longitude != 0) {
-                Log.d(TAG, "onReceiveLocation--->��ǰ���У�" + city + ",���� = " + longitude + ",γ�� = " + latitude);
-                //��λ�ɹ�����ȡ������γ�������¸�AIUI���ò���
+                Log.d(TAG, "onReceiveLocation--->当前城市：" + city + ",经度 = " + longitude + ",纬度 = " + latitude);
+                //定位成功，获取到经度纬度则重新给AIUI设置参数
                 if (mAiuiManager.getAIUIControler() != null) {
                     mAiuiManager.getAIUIControler().setAIUIParams(longitude, latitude);
                 }
-                //ֹͣ�ٶȶ�λ
+                //停止百度定位
                 mLocationClient.stop();
             }
         }
     }
 
     /**
-     * ���ðٶȶ�λ����
+     * 设置百度定位参数
      */
     private void setLocationParams() {
         locationClientOption.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
-        //��ѡ�����ö�λģʽ��Ĭ�ϸ߾���
-        //LocationMode.Hight_Accuracy���߾��ȣ�
-        //LocationMode. Battery_Saving���͹��ģ�
-        //LocationMode. Device_Sensors����ʹ���豸��
+        //可选，设置定位模式，默认高精度
+        //LocationMode.Hight_Accuracy：高精度；
+        //LocationMode. Battery_Saving：低功耗；
+        //LocationMode. Device_Sensors：仅使用设备；
         locationClientOption.setCoorType("gcj02");
-        //��ѡ�����÷��ؾ�γ���������ͣ�Ĭ��gcj02
-        //gcj02����������ꣻ
-        //bd09ll���ٶȾ�γ�����ꣻ
-        //bd09���ٶ�ī�������ꣻ
-        //���������λ�����������������ͣ�ͳһ����wgs84��������
+        //可选，设置返回经纬度坐标类型，默认gcj02
+        //gcj02：国测局坐标；
+        //bd09ll：百度经纬度坐标；
+        //bd09：百度墨卡托坐标；
+        //海外地区定位，无需设置坐标类型，统一返回wgs84类型坐标
         locationClientOption.setScanSpan(1000);
-        //��ѡ�����÷���λ����ļ����int���ͣ���λms
-        //�������Ϊ0��������ζ�λ��������λһ�Σ�Ĭ��Ϊ0
-        //������÷�0��������1000ms���ϲ���Ч
+        //可选，设置发起定位请求的间隔，int类型，单位ms
+        //如果设置为0，则代表单次定位，即仅定位一次，默认为0
+        //如果设置非0，需设置1000ms以上才有效
         locationClientOption.setOpenGps(true);
-        //��ѡ�������Ƿ�ʹ��gps��Ĭ��false
-        //ʹ�ø߾��Ⱥͽ����豸���ֶ�λģʽ�ģ�������������Ϊtrue
+        //可选，设置是否使用gps，默认false
+        //使用高精度和仅用设备两种定位模式的，参数必须设置为true
         locationClientOption.setLocationNotify(true);
-        //��ѡ�������Ƿ�GPS��Чʱ����1S/1��Ƶ�����GPS�����Ĭ��false
+        //可选，设置是否当GPS有效时按照1S/1次频率输出GPS结果，默认false
         locationClientOption.setIgnoreKillProcess(false);
-        //��ѡ����λSDK�ڲ���һ��service�����ŵ��˶������̡�
-        //�����Ƿ���stop��ʱ��ɱ��������̣�Ĭ�ϣ����飩��ɱ������setIgnoreKillProcess(true)
+        //可选，定位SDK内部是一个service，并放到了独立进程。
+        //设置是否在stop的时候杀死这个进程，默认（建议）不杀死，即setIgnoreKillProcess(true)
         locationClientOption.SetIgnoreCacheException(false);
-        //��ѡ�������Ƿ��ռ�Crash��Ϣ��Ĭ���ռ���������Ϊfalse
+        //可选，设置是否收集Crash信息，默认收集，即参数为false
         //locationClientOption.setWifiCacheTimeOut(5 * 60 * 1000);
-        //��ѡ��7.2�汾��������
-        //��������˸ýӿڣ��״�������λʱ�������жϵ�ǰWiFi�Ƿ񳬳���Ч�ڣ���������Ч�ڣ���������ɨ��WiFi��Ȼ��λ
+        //可选，7.2版本新增能力
+        //如果设置了该接口，首次启动定位时，会先判断当前WiFi是否超出有效期，若超出有效期，会先重新扫描WiFi，然后定位
         locationClientOption.setEnableSimulateGps(false);
         locationClientOption.setIsNeedAddress(true);
-        //��ѡ�������Ƿ���Ҫ����GPS��������Ĭ����Ҫ��������Ϊfalse
+        //可选，设置是否需要过滤GPS仿真结果，默认需要，即参数为false
         mLocationClient.setLocOption(locationClientOption);
-        //mLocationClientΪ�ڶ�����ʼ������LocationClient����
-        //�轫���úõ�LocationClientOption����ͨ��setLocOption�������ݸ�LocationClient����ʹ��
-        //����LocationClientOption�����ã��������ο���LocationClientOption�����ϸ˵��
+        //mLocationClient为第二步初始化过的LocationClient对象
+        //需将配置好的LocationClientOption对象，通过setLocOption方法传递给LocationClient对象使用
+        //更多LocationClientOption的配置，请参照类参考中LocationClientOption类的详细说明
     }
 
     private OnVolumeChangedListener myOnVolumeChangedListener = new OnVolumeChangedListener() {

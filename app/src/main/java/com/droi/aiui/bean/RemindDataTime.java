@@ -6,15 +6,15 @@ package com.droi.aiui.bean;
 
 public class RemindDataTime {
 
-    //���
+    //年份
     private String year;
-    //����
+    //日期
     private String day;
-    //ʱ��
+    //时间
     private String time;
-    //����
+    //星期
     private String week;
-    //���绹������
+    //上午还是下午
     private String ampm;
 
     public RemindDataTime() {

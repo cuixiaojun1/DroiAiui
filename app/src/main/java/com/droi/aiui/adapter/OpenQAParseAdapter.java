@@ -1,5 +1,7 @@
 package com.droi.aiui.adapter;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,6 +15,7 @@ public class OpenQAParseAdapter extends BaseParseAdapter {
     @Override
     public String getSemanticResultText(String json) {
         String answerText = null;
+        Log.d(TAG,"OpenQAParseAdapter--->getSemanticResultText-->json =  "+json);
         try {
             JSONObject resultJson = new JSONObject(json);
             JSONObject answerJson = new JSONObject(resultJson.optString("answer"));

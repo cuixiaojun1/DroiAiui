@@ -24,7 +24,7 @@ public class RemindListView extends ListView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int expandSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE >> 2,
-                MeasureSpec.AT_MOST);//Measure specification mode: The child can be as large as it wants up to the specified size.����>����ScrollViewǶ��ListViewֻ��ʾһ�е����⣬�˴���ListView��ռ�Ĵ�С��Ҫ��Ĵ�Сһ����
+                MeasureSpec.AT_MOST);//Measure specification mode: The child can be as large as it wants up to the specified size.——>处理ScrollView嵌套ListView只显示一行的问题，此处让ListView所占的大小与要求的大小一样大
         super.onMeasure(widthMeasureSpec, expandSpec);
     }
 }

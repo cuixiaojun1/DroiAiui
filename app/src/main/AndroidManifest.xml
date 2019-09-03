@@ -94,7 +94,7 @@
         <!-- 讯飞语音-->
         <provider
             android:name="com.iflytek.business.speech.SharedProvider"
-            android:authorities="com.cappu.aiui.provider"
+            android:authorities="com.droi.aiui.provider"
             android:exported="true" />
 
         <activity

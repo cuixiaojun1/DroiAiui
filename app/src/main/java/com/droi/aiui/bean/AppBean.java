@@ -11,12 +11,12 @@ public class AppBean extends BaseBean {
     /**
      * category : CAPPU.applacition
      * intentType : custom
-     * query : ��ͨѶ¼
-     * query_ws : ��/VI//  ͨѶ¼/NN//
+     * query : 打开通讯录
+     * query_ws : 打开/VI//  通讯录/NN//
      * nlis : true
      * vendor : CAPPU
      * version : 3.0
-     * semantic : [{"entrypoint":"ent","intent":"default_intent","score":1,"slots":[{"begin":2,"end":5,"name":"applacition","normValue":"ͨѶ¼","value":"ͨѶ¼"}]}]
+     * semantic : [{"entrypoint":"ent","intent":"default_intent","score":1,"slots":[{"begin":2,"end":5,"name":"applacition","normValue":"通讯录","value":"通讯录"}]}]
      * state : null
      */
 
@@ -107,7 +107,7 @@ public class AppBean extends BaseBean {
          * entrypoint : ent
          * intent : default_intent
          * score : 1
-         * slots : [{"begin":2,"end":5,"name":"applacition","normValue":"ͨѶ¼","value":"ͨѶ¼"}]
+         * slots : [{"begin":2,"end":5,"name":"applacition","normValue":"通讯录","value":"通讯录"}]
          */
 
         private String entrypoint;
@@ -152,8 +152,8 @@ public class AppBean extends BaseBean {
              * begin : 2
              * end : 5
              * name : applacition
-             * normValue : ͨѶ¼
-             * value : ͨѶ¼
+             * normValue : 通讯录
+             * value : 通讯录
              */
 
             private int begin;

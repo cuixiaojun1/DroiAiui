@@ -15,7 +15,7 @@ class Constants {
     public static final String APP_SECRET = "e5bcf3af334e41638ab73fcd4840fc81";
     public static final String SIGN       = MD5Utils.md5Encode(APP_SECRET + SIGN_KEY);
     /**
-     * ���̴洢�ļ���
+     * 工程存储文件夹
      */
     public static String BASE_PROJECT_DIR = Environment.getExternalStorageDirectory() + File.separator + "CappuAiui";
 }

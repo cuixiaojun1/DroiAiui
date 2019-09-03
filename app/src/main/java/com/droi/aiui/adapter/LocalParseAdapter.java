@@ -46,7 +46,7 @@ public class LocalParseAdapter{
     }
 
     /**
-     * ����绰������ͼ
+     * 处理电话技能意图
      * @param json
      * @return
      */
@@ -59,29 +59,29 @@ public class LocalParseAdapter{
     }
 
     /**
-     * ��������ͼ
-     * @param json ���ط��ؽ��
+     * 处理技能意图
+     * @param json 本地返回结果
      * @return
      */
     private String handleActions(String json){
         //mMusicService = AiuiManager.getInstance(mContext).getMusicService();
         allContacts = mDataControler.loadAllContacts();
         allApps = mDataControler.loadAllApps();
-        //��ϵ������
+        //联系人名称
         String contactName = getOperateActionByIntent(json,"<contact>");
-        //�绰����
+        //电话技能
         String callSkill = getOperateActionByIntent(json,"<callCmd>");
-        //������ͼ
+        //短信意图
         String smsSkill = getOperateActionByIntent(json,"<smsCmd>");
-        //Ӧ�ü���
+        //应用技能
         String appSkill = getOperateActionByIntent(json,"<appCmd>");
         String appName = getOperateActionByIntent(json,"<appName>");
-        //������ͼ
+        //音乐意图
         String musicSkill = getOperateActionByIntent(json,"<playMusic>");
         String song = getOperateActionByIntent(json,"<songName>");
         String singer = getOperateActionByIntent(json,"<singerName>");
         String songType = getOperateActionByIntent(json,"<musicType>");
-        //������ͼ
+        //设置意图
         String settingCmdIncrease = getOperateActionByIntent(json,"<cmdIncrease>");
         String settingCmdReduce = getOperateActionByIntent(json,"<cmdReduce>");
         String settingCmdOpen = getOperateActionByIntent(json,"<cmdOpen>");
@@ -96,7 +96,7 @@ public class LocalParseAdapter{
         String settingTypeLight = getOperateActionByIntent(json,"<typeLight>");
         String settingTypeFont = getOperateActionByIntent(json,"<typeFont>");
         String settingTypeTorch = getOperateActionByIntent(json,"<typeTorch>");
-        //�����л�����
+        //方言切换设置
         String speechDefault = getOperateActionByIntent(json,"<pthDefault>");
         String speechWomen = getOperateActionByIntent(json,"<pthWomen>");
         String speechGirl = getOperateActionByIntent(json,"<pthGirl>");
@@ -138,9 +138,9 @@ public class LocalParseAdapter{
     }
 
     /**
-     * ��ȡ���ؼ�������
-     * @param json �������巵�ؽ��
-     * @param intent ��������
+     * 获取本地技能类型
+     * @param json 本地语义返回结果
+     * @param intent 技能类型
      * @return
      */
     private String getOperateActionByIntent(String json,String intent){
@@ -164,7 +164,7 @@ public class LocalParseAdapter{
     }
 
     /**
-     * ��ȡ���ؽ����
+     * 获取返回结果码
      * @param json
      * @return
      */
@@ -180,7 +180,7 @@ public class LocalParseAdapter{
     }
 
     /**
-     * �ж��ַ����Ƿ����
+     * 判断字符串是否存在
      * @param text
      * @return
      */
@@ -189,7 +189,7 @@ public class LocalParseAdapter{
     }
 
     /**
-     * ͨ����ϵ�����ƻ�ȡ��ϵ�˵ĵ绰����
+     * 通过联系人名称获取联系人的电话号码
      * @param name
      * @return
      */
@@ -206,7 +206,7 @@ public class LocalParseAdapter{
     }
 
     /**
-     * ͨ����ϵ�˵ĵ绰�����ȡ�ú���ĵ绰���ͣ������֣��й��ƶ����й����ţ��й���ͨ
+     * 通过联系人的电话号码获取该号码的电话类型，即三种，中国移动，中国电信，中国联通
      * @param phoneNumber
      * @return
      */
@@ -223,24 +223,24 @@ public class LocalParseAdapter{
     }
 
     /**
-     * �жϵ绰��������
+     * 判断电话号码类型
      */
     private String getPhoneType(String phoneType){
         String type = null;
-        if(phoneType.contains("�ƶ�")){
-            type = "�ƶ�";
-        }else if(phoneType.contains("��ͨ")){
-            type = "��ͨ";
-        }else if(phoneType.contains("����")){
-            type = "����";
+        if(phoneType.contains("移动")){
+            type = "移动";
+        }else if(phoneType.contains("联通")){
+            type = "联通";
+        }else if(phoneType.contains("电信")){
+            type = "电信";
         }else{
-            type = "δ֪";
+            type = "未知";
         }
         return type;
     }
 
     /**
-     * ��ʶ�����л�ȡ�绰����
+     * 从识别结果中获取电话号码
      */
     private String getPhoneNumberFromResult(String json){
         StringBuffer phoneNumber = new StringBuffer();
@@ -263,7 +263,7 @@ public class LocalParseAdapter{
     }
 
     /**
-     * �����ص绰����
+     * 处理本地电话技能
      */
     private String handleCallAction(String jsonResult, String contactName){
         Log.d(TAG,"handleCallAction---->contactName = "+contactName);
@@ -275,7 +275,7 @@ public class LocalParseAdapter{
     }
 
     /**
-     * �����ص绰����
+     * 处理本地电话技能
      */
     private String handleSmsAction(String jsonResult, String contactName){
         Log.d(TAG,"handleSmsAction---->contactName = "+contactName);
@@ -287,14 +287,14 @@ public class LocalParseAdapter{
     }
 
     /**
-     * ����绰
+     * 拨打电话
      */
     private String doCall(String name, final String phoneNumber) {
         Log.d(TAG,"doCall---->name = "+name+",phoneNumber = "+phoneNumber);
         String result;
         if (isTextExist(name)) {
             if(FunctionUtil.hasSimCard(mContext)){
-                result = "����Ϊ������" + name;
+                result = "正在为您呼叫" + name;
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -304,11 +304,11 @@ public class LocalParseAdapter{
                     }
                 }, 3000);
             }else{
-                result = "û���������ֻ��м�⵽SIM��������SIM���Ƿ���ȷ���룡";
+                result = "没有在您的手机中检测到SIM卡，请检查SIM卡是否正确插入！";
             }
         } else if(isTextExist(phoneNumber)){
             if(FunctionUtil.hasSimCard(mContext)){
-                result = "����Ϊ������" + phoneNumber;
+                result = "正在为您呼叫" + phoneNumber;
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -318,53 +318,53 @@ public class LocalParseAdapter{
                     }
                 }, 3000);
             }else{
-                result = "û���������ֻ��м�⵽SIM��������SIM���Ƿ���ȷ���룡";
+                result = "没有在您的手机中检测到SIM卡，请检查SIM卡是否正确插入！";
             }
         } else {
             final ComponentName component = new ComponentName("com.android.dialer","com.android.dialer.app.DialtactsActivity");
             if(openApp(component)){
                 if(FunctionUtil.isScreenLocked(mContext)){
-                    result = "����Ϊ���򿪵绰�����̣������֮����в鿴��";
+                    result = "正在为您打开电话拨号盘，请解锁之后进行查看！";
                 }else{
-                    result = "����Ϊ���򿪵绰�����̣�";
+                    result = "正在为您打开电话拨号盘！";
                 }
             }else{
-                result = "û��Ϊ���ҵ���صĵ绰�����̣�";
+                result = "没有为您找到相关的电话拨号盘！";
             }
         }
         return result;
     }
 
     /**
-     * ������Ӧ�ü���
+     * 处理本地应用技能
      */
     private String handleAppAction(String appName){
         Log.d(TAG,"handleAppAction---->appName = "+appName);
-        if(appName.equals("��������")){
-            return "����ǰ���������������棡";
+        if(appName.equals("智能语音")){
+            return "您当前已在智能语音界面！";
         }
         ComponentName componentName = FunctionUtil.getComponentByAppName(allApps,appName);
         FunctionUtil.isScreenLocked(mContext);
         if(openApp(componentName)){
             if(FunctionUtil.isScreenLocked(mContext)){
-                return "����Ϊ����"+appName+",�����֮����в鿴��";
+                return "正在为您打开"+appName+",请解锁之后进行查看！";
             }else{
-                return "����Ϊ����"+appName;
+                return "正在为您打开"+appName;
             }
         }else{
-            return "û��Ϊ���ҵ���Ӧ�ã�";
+            return "没有为您找到该应用！";
         }
     }
 
     /**
-     * ����绰
+     * 拨打电话
      */
     private String doSms(String name, final String phoneNumber) {
         Log.d(TAG,"doSms---->name = "+name+",phoneNumber = "+phoneNumber);
         String result;
         if (isTextExist(name)) {
             if(FunctionUtil.hasSimCard(mContext)){
-                result = "���ڷ����Ÿ�" + name;
+                result = "正在发短信给" + name;
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -372,11 +372,11 @@ public class LocalParseAdapter{
                     }
                 },3000);
             }else{
-                result = "û���������ֻ��м�⵽SIM��������SIM���Ƿ���ȷ���룡";
+                result = "没有在您的手机中检测到SIM卡，请检查SIM卡是否正确插入！";
             }
         } else if(isTextExist(phoneNumber)){
             if(FunctionUtil.hasSimCard(mContext)){
-                result = "���ڷ����Ÿ�" + phoneNumber;
+                result = "正在发短信给" + phoneNumber;
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -384,25 +384,25 @@ public class LocalParseAdapter{
                     }
                 },3000);
             }else{
-                result = "û���������ֻ��м�⵽SIM��������SIM���Ƿ���ȷ���룡";
+                result = "没有在您的手机中检测到SIM卡，请检查SIM卡是否正确插入！";
             }
         } else {
             final ComponentName component = new ComponentName("com.android.mms","com.android.mms.ui.ConversationList");
             if(openApp(component)){
                 if(FunctionUtil.isScreenLocked(mContext)){
-                    result = "����Ϊ���򿪶���Ӧ�ã������֮����в鿴��";
+                    result = "正在为您打开短信应用，请解锁之后进行查看！";
                 }else{
-                    result = "����Ϊ���򿪶���Ӧ�ã�";
+                    result = "正在为您打开短信应用！";
                 }
             }else{
-                result = "û��Ϊ���ҵ���صĶ���Ӧ�ã�";
+                result = "没有为您找到相关的短信应用！";
             }
         }
         return result;
     }
 
     /**
-     * ���������ּ���
+     * 处理本地音乐技能
      * @param singer
      * @param song
      * @param songType
@@ -424,7 +424,7 @@ public class LocalParseAdapter{
     }
 
     /**
-     * ��Ӧ��
+     * 打开应用
      */
     private boolean openApp(final ComponentName component){
         Log.d(TAG,"[LocaleParseAdapter][openApp]component = "+component);
@@ -441,55 +441,45 @@ public class LocalParseAdapter{
     }
 
     /**
-     * �������ĳ���͸����������и�������ĳ�����ֵ����и���
-     * ���ܰ���ĳ�����͵ĸ�����ȫ��������ĳ���ֵĸ���
+     * 随机播放某类型歌曲或者所有歌曲或者某个歌手的所有歌曲
+     * 可能包含某种类型的歌曲，全部歌曲，某歌手的歌曲
      */
     private String playSongByRandom(List<Song> songs){
         Log.d(TAG,"[LocalParseAdapter][playSongByRandom]allSongsSize = "+allSongs.size());
-        String result = null;
+        String result;
         if(songs != null && songs.size() > 0){
             long[] playList = FunctionUtil.getPlayList(songs);
             Random random = new Random();
             int position = random.nextInt(playList.length);
             String name = songs.get(position).getTitle();
-            /*if(mMusicService != null){
-                //FunctionUtil.playMusicByList(mMusicService,playList,position);
-                result = "����Ϊ������"+name;
-            }else{
-                result = "���ַ����ʼ��ʧ�ܣ������³��ԣ�";
-            }*/
+            result = "音乐服务初始化失败，请重新尝试！";
         }else{
-            result = "�Բ���û���������ֻ�����ҵ������������֮�����ԣ�";
+            result = "对不起，没有在您的手机里边找到歌曲，请添加之后重试！";
         }
         return result;
     }
 
     /**
-     * �������
+     * 随机歌曲
      */
     private String playSongByName(String songName){
         Log.d(TAG,"[LocalParseAdapter][playSongByName]songName = "+songName);
-        String result = null;
+        String result;
         String songPath;
         if(allSongs != null && allSongs.size() > 0){
-            if(isSongNameExisted(allSongs,songName)){//�жϸ����Ƿ����
-                /*if(mMusicService != null){
-                    result = "����Ϊ������"+songName+"!";
-                    playMusicByName(mMusicService,songName);
-                }else{
-                    result = "���ַ����ʼ��ʧ�ܣ������³��ԣ�";
-                }*/
+            if(isSongNameExisted(allSongs,songName)){//判断歌曲是否存在
+                result = "音乐服务初始化失败，请重新尝试！";
             }else{
-                result = "û���ҵ�����"+songName+"��������������ĸ�����";
+                result = "没有找到歌曲"+songName+"，您可以听听别的歌曲！";
             }
         }else{
-            result = "û���������ֻ����ҵ������������֮�����³��ԣ�";
+            result = "没有在您的手机中找到歌曲，请添加之后重新尝试！";
         }
         return result;
     }
 
     /**
-     * ͨ���������ƻ�ȡ���ֵĲ���·��
+     * 通过音乐名称获取音乐的播放路径
      */
     private String getSongPathByName(List<Song> allSongs,String songName){
         if(allSongs != null && allSongs.size() > 0){
@@ -503,7 +493,7 @@ public class LocalParseAdapter{
     }
 
     /**
-     * �жϸ����Ƿ����
+     * 判断歌手是否存在
      */
     private boolean isSongNameExisted(List<Song> allSongs,String songName){
         Log.d(TAG,"[MusicParseAdapter][isExisted]songName = "+songName);
@@ -517,7 +507,7 @@ public class LocalParseAdapter{
     }
 
     /**
-     * �������ĳ������
+     * 随机播放某种音乐
      */
     private String playMusicBySongType(String songType){
         ArrayList<Song> songs = getSongsByType(songType);
@@ -525,24 +515,24 @@ public class LocalParseAdapter{
         if(songs != null && songs.size() != 0){
             return playSongByRandom(songs);
         }else{
-          return "û��Ϊ���ҵ�"+songType+"��صĸ�����";
+          return "没有为您找到"+songType+"相关的歌曲！";
         }
     }
 
     /**
-     * ����ĳ�����ֵ�ĳ�׸���
+     * 播放某个歌手的某首歌曲
      */
     private String playSongBySingerAndSong(String singer,String song){
         Log.d(TAG,"playSongBySingerAndSong--->singer = "+singer+",song = "+song);
         if(isSingerOrSongExisted(singer,song)){
             return playSongByName(song);
         }else{
-            return "û��Ϊ���ҵ�"+singer+"��"+song+"!";
+            return "没有为您找到"+singer+"的"+song+"!";
         }
     }
 
     /**
-     * �������ĳ�����ֵĸ���
+     * 随机播放某个歌手的歌曲
      */
     private String playSongBySingerWithRandom(String singer){
         Log.d(TAG,"playSongBySingerWithRandom--->singer = "+singer);
@@ -550,12 +540,12 @@ public class LocalParseAdapter{
         if(songs != null && songs.size() != 0){
             return playSongByRandom(songs);
         }else{
-            return "�Բ���û��Ϊ���ҵ�"+singer+"��صĸ�����";
+            return "对不起，没有为您找到"+singer+"相关的歌曲！";
         }
     }
 
     /**
-     * ���Ÿ���
+     * 播放歌曲
      */
     /*private void playMusicByName(IMediaPlaybackService mMusicService,String songName){
         Log.d(TAG,"[MusicParseAdapter][playMusicByName]mMusicService = "+mMusicService+",songPath = "+songName);
@@ -576,7 +566,7 @@ public class LocalParseAdapter{
     }*/
 
     /**
-     * ͨ���������ֻ�ȡ���иø��ֵĸ���
+     * 通过歌手名字获取所有该歌手的歌曲
      */
     private ArrayList<Song> getSongsBySinger(String singer){
         ArrayList<Song> songs = new ArrayList<Song>();
@@ -590,7 +580,7 @@ public class LocalParseAdapter{
     }
 
     /**
-     * ͨ���������͵����Ƶõ���صĸ����б�
+     * 通过歌曲类型的名称得到相关的歌曲列表
      */
     private ArrayList<Song> getSongsByType(String songType){
         ArrayList<Song> songs = new ArrayList<Song>();
@@ -607,7 +597,7 @@ public class LocalParseAdapter{
     }
 
     /**
-     * �жϸ����Ƿ���ڻ��߸����Ƿ����
+     * 判断歌手是否存在或者歌名是否存在
      */
     private boolean isSingerOrSongExisted(String singer,String song){
         if(allSongs != null && allSongs.size() != 0){
@@ -623,7 +613,7 @@ public class LocalParseAdapter{
     }
 
     /**
-     * ����������ͼ
+     * 处理设置意图
      */
     private String handleSettingAction(String increase, String reduce, String open,String close,
                                        String takePhoto,String viewPhoto,String wifi,String data,String gps,
@@ -640,7 +630,7 @@ public class LocalParseAdapter{
     }
 
     /**
-     * ����������Ļ�������弼��
+     * 处理音量屏幕亮度字体技能
      */
     private String handleVolumeLightFontAction(String increase, String reduce,String volume,String light,String font){
         if(isTextExist(volume)){
@@ -655,7 +645,7 @@ public class LocalParseAdapter{
     }
 
     /**
-     * ����wifi,�������ӣ�GPS���������ֵ�Ͳ
+     * 处理wifi,数据连接，GPS，蓝牙，手电筒
      */
     private String handleWifiDataGpsBtTorchAction(String open, String close,String wifi,String data,String gps,String bt,String torch){
         if(isTextExist(wifi)){
@@ -674,7 +664,7 @@ public class LocalParseAdapter{
     }
 
     /**
-     * �����Լ���
+     * 处理方言技能
      */
     private String handleDialectAction(String speechDefault,String speechWomen,String speechGirl,String speechMan,String speechDongbei,String speechHenan,
                                     String speechHunan,String speechSichuan,String speechTaiwan,String speechYueyu){
@@ -690,7 +680,7 @@ public class LocalParseAdapter{
     }
 
     /**
-     * ���÷���
+     * 设置方言
      */
     private String setDialect(String speechDefault,String speechWomen,String speechGirl,String speechMan,String speechDongbei,String speechHenan,
                                String speechHunan,String speechSichuan,String speechTaiwan,String speechYueyu){
@@ -698,112 +688,112 @@ public class LocalParseAdapter{
         if(isTextExist(speechDefault)){
             if(mSpeechControler != null){
                 if(mSpeechControler.getSpeaker().equals(mSpeechControler.SPEAKER_DEFAULT)){
-                    return "��ǰ�Ѿ�Ϊ"+speechDefault+"!";
+                    return "当前已经为"+speechDefault+"!";
                 }else{
                     mSpeechControler.setSpeaker(mContext,mSpeechControler.SPEAKER_DEFAULT);
-                    return "�Ѿ�Ϊ���л�Ϊ"+speechDefault+"!";
+                    return "已经为您切换为"+speechDefault+"!";
                 }
             }else{
-                return "�����л�ʧ��!";
+                return "方言切换失败!";
             }
         }else if(isTextExist(speechWomen)){
             if(mSpeechControler != null){
                 if(mSpeechControler.getSpeaker().equals(mSpeechControler.SPEAKER_JIAJIA)){
-                    return "��ǰ�Ѿ�Ϊ"+speechWomen+"!";
+                    return "当前已经为"+speechWomen+"!";
                 }else{
                     mSpeechControler.setSpeaker(mContext,mSpeechControler.SPEAKER_JIAJIA);
-                    return "�Ѿ�Ϊ���л�Ϊ"+speechWomen+"!";
+                    return "已经为您切换为"+speechWomen+"!";
                 }
             }else{
-                return "�����л�ʧ��!";
+                return "方言切换失败!";
             }
         }else if(isTextExist(speechGirl)){
             if(mSpeechControler != null){
                 if(mSpeechControler.getSpeaker().equals(mSpeechControler.SPEAKER_NANNAN)){
-                    return "��ǰ�Ѿ�Ϊ"+speechGirl+"!";
+                    return "当前已经为"+speechGirl+"!";
                 }else{
                     mSpeechControler.setSpeaker(mContext,mSpeechControler.SPEAKER_NANNAN);
-                    return "�Ѿ�Ϊ���л�Ϊ"+speechGirl+"!";
+                    return "已经为您切换为"+speechGirl+"!";
                 }
             }else{
-                return "�����л�ʧ��!";
+                return "方言切换失败!";
             }
         }else if(isTextExist(speechMan)){
             if(mSpeechControler != null){
                 if(mSpeechControler.getSpeaker().equals(mSpeechControler.SPEAKER_XIAOFENG)){
-                    return "��ǰ�Ѿ�Ϊ"+speechMan+"!";
+                    return "当前已经为"+speechMan+"!";
                 }else{
                     mSpeechControler.setSpeaker(mContext,mSpeechControler.SPEAKER_XIAOFENG);
-                    return "�Ѿ�Ϊ���л�Ϊ"+speechMan+"!";
+                    return "已经为您切换为"+speechMan+"!";
                 }
             }else{
-                return "�����л�ʧ��!";
+                return "方言切换失败!";
             }
         }else if(isTextExist(speechDongbei)){
             if(mSpeechControler != null){
                 if(mSpeechControler.getSpeaker().equals(mSpeechControler.SPEAKER_DONG_BEI)){
-                    return "��ǰ�Ѿ�Ϊ"+speechDongbei+"!";
+                    return "当前已经为"+speechDongbei+"!";
                 }else{
                     mSpeechControler.setSpeaker(mContext,mSpeechControler.SPEAKER_DONG_BEI);
-                    return "�Ѿ�Ϊ���л�Ϊ"+speechDongbei+"!";
+                    return "已经为您切换为"+speechDongbei+"!";
                 }
             }else{
-                return "�����л�ʧ��!";
+                return "方言切换失败!";
             }
         }else if(isTextExist(speechHenan)){
             if(mSpeechControler != null){
                 if(mSpeechControler.getSpeaker().equals(mSpeechControler.SPEAKER_HE_NAN)){
-                    return "��ǰ�Ѿ�Ϊ"+speechHenan+"!";
+                    return "当前已经为"+speechHenan+"!";
                 }else{
                     mSpeechControler.setSpeaker(mContext,mSpeechControler.SPEAKER_HE_NAN);
-                    return "�Ѿ�Ϊ���л�Ϊ"+speechHenan+"!";
+                    return "已经为您切换为"+speechHenan+"!";
                 }
             }else{
-                return "�����л�ʧ��!";
+                return "方言切换失败!";
             }
         }else if(isTextExist(speechHunan)){
             if(mSpeechControler != null){
                 if(mSpeechControler.getSpeaker().equals(mSpeechControler.SPEAKER_HU_NAN)){
-                    return "��ǰ�Ѿ�Ϊ"+speechHunan+"!";
+                    return "当前已经为"+speechHunan+"!";
                 }else{
                     mSpeechControler.setSpeaker(mContext,mSpeechControler.SPEAKER_HU_NAN);
-                    return "�Ѿ�Ϊ���л�Ϊ"+speechHunan+"!";
+                    return "已经为您切换为"+speechHunan+"!";
                 }
             }else{
-                return "�����л�ʧ��!";
+                return "方言切换失败!";
             }
         }else if(isTextExist(speechSichuan)){
             if(mSpeechControler != null){
                 if(mSpeechControler.getSpeaker().equals(mSpeechControler.SPEAKER_SI_CHUAN)){
-                    return "��ǰ�Ѿ�Ϊ"+speechSichuan+"!";
+                    return "当前已经为"+speechSichuan+"!";
                 }else{
                     mSpeechControler.setSpeaker(mContext,mSpeechControler.SPEAKER_SI_CHUAN);
-                    return "�Ѿ�Ϊ���л�Ϊ"+speechSichuan+"!";
+                    return "已经为您切换为"+speechSichuan+"!";
                 }
             }else{
-                return "�����л�ʧ��!";
+                return "方言切换失败!";
             }
         }else if(isTextExist(speechTaiwan)){
             if(mSpeechControler != null){
                 if(mSpeechControler.getSpeaker().equals(mSpeechControler.SPEAKER_TAIWAN)){
-                    return "��ǰ�Ѿ�Ϊ"+speechTaiwan+"!";
+                    return "当前已经为"+speechTaiwan+"!";
                 }else{
                     mSpeechControler.setSpeaker(mContext,mSpeechControler.SPEAKER_TAIWAN);
-                    return "�Ѿ�Ϊ���л�Ϊ"+speechTaiwan+"!";
+                    return "已经为您切换为"+speechTaiwan+"!";
                 }
             }else{
-                return "�����л�ʧ��!";
+                return "方言切换失败!";
             }
         }else if(isTextExist(speechYueyu)){
             if(mSpeechControler != null){
                 if(mSpeechControler.getSpeaker().equals(mSpeechControler.SPEAKER_YUE_YU)){
-                    return "��ǰ�Ѿ�Ϊ"+speechYueyu+"!";
+                    return "当前已经为"+speechYueyu+"!";
                 }else{
                     mSpeechControler.setSpeaker(mContext,mSpeechControler.SPEAKER_YUE_YU);
-                    return "�Ѿ�Ϊ���л�Ϊ"+speechYueyu+"!";
+                    return "已经为您切换为"+speechYueyu+"!";
                 }
             }else{
-                return "�����л�ʧ��!";
+                return "方言切换失败!";
             }
         }else{
             return null;
@@ -811,23 +801,23 @@ public class LocalParseAdapter{
     }
 
     /**
-     * ������������
+     * 处理音量技能
      */
     private String handleVolumeAction(String increase,String reduce){
         Log.d(TAG,"handleVolumeAction--->volume = "+FunctionUtil.getVolume(mContext));
         if(isTextExist(increase)){
             if(FunctionUtil.getVolume(mContext) >= 15){
-                return "��ǰ�����Ѿ���Ϊ���";
+                return "当前音量已经调为最大！";
             }else{
                 FunctionUtil.upVoice(mContext);
-                return "�Ѿ�Ϊ������������";
+                return "已经为您调高音量！";
             }
         } else if(isTextExist(reduce)){
             if(FunctionUtil.getVolume(mContext) <= 0){
-                return "��ǰ�����Ѿ���Ϊ��С��";
+                return "当前音量已经调为最小！";
             }else{
                 FunctionUtil.downVoice(mContext);
-                return "�Ѿ�Ϊ������������";
+                return "已经为您调低音量！";
             }
         } else {
             return null;
@@ -835,23 +825,23 @@ public class LocalParseAdapter{
     }
 
     /**
-     * ������Ļ���ȼ���
+     * 处理屏幕亮度技能
      */
     private String handleLightAction(String increase,String reduce){
-        Log.d(TAG,"handleLightAction:��ǰ��Ļ����: = "+FunctionUtil.getBrightness(mContext));
+        Log.d(TAG,"handleLightAction:当前屏幕亮度: = "+FunctionUtil.getBrightness(mContext));
         if(isTextExist(increase)){
             if(FunctionUtil.getBrightness(mContext) >= 255){
-                return "��ǰ��Ļ�����Ѿ�����������";
+                return "当前屏幕亮度已经调到最亮！";
             }else{
                 FunctionUtil.upBrightness(mContext);
-                return "�Ѿ�Ϊ��������Ļ���ȣ�";
+                return "已经为您调亮屏幕亮度！";
             }
         }else if(isTextExist(reduce)){
             if(FunctionUtil.getBrightness(mContext) <= 0){
-                return "��ǰ��Ļ�����Ѿ���Ϊ���";
+                return "当前屏幕亮度已经调为最暗！";
             }else{
                 FunctionUtil.downBrightness(mContext);
-                return "�Ѿ�Ϊ��������Ļ���ȣ�";
+                return "已经为您调暗屏幕亮度！";
             }
         }else{
             return null;
@@ -859,7 +849,7 @@ public class LocalParseAdapter{
     }
 
     /**
-     * �������弼��
+     * 处理字体技能
      */
     private String handleFontAction(String increase,String reduce){
         float newFontSize = mContext.getResources().getConfiguration().fontScale;
@@ -877,66 +867,66 @@ public class LocalParseAdapter{
                 configuration.fontScale = default_fontSize;
                 try {
                     ActivityManagerNative.getDefault().updatePersistentConfiguration(configuration);
-                    return "�Ѿ�Ϊ����ΪĬ�����壡";
+                    return "已经为您调为默认字体！";
                 } catch (RemoteException e) {
                     e.printStackTrace();
-                    return "�������ʧ�ܣ�";
+                    return "字体调节失败！";
                 }
             } else if (newFontSize == default_fontSize) {
                 configuration.fontScale = bigger_fontSize;
                 try {
                     ActivityManagerNative.getDefault().updatePersistentConfiguration(configuration);
-                    return "�Ѿ�Ϊ����Ϊ�������壡";
+                    return "已经为您调为更大字体！";
                 } catch (RemoteException e) {
                     e.printStackTrace();
-                    return "�������ʧ�ܣ�";
+                    return "字体调节失败！";
                 }
             } else if (newFontSize == bigger_fontSize) {
                 configuration.fontScale = biggest_fontSize;
                 try {
                     ActivityManagerNative.getDefault().updatePersistentConfiguration(configuration);
-                    return "�Ѿ�Ϊ����Ϊ������壡";
+                    return "已经为您调为最大字体！";
                 } catch (RemoteException e) {
                     e.printStackTrace();
-                    return "�������ʧ�ܣ�";
+                    return "字体调节失败！";
                 }
             } else if(newFontSize == biggest_fontSize){
-                return "��ǰ�����Ѿ�Ϊ������壡";
+                return "当前字体已经为最大字体！";
             } else{
-                return "δʶ��ǰ�����С��";
+                return "未识别当前字体大小！";
             }
         }else if(isTextExist(reduce)){
             if (newFontSize == small_fontSize) {
-                return "��ǰ�����Ѿ�Ϊ��С���壡";
+                return "当前字体已经为最小字体！";
             } else if (newFontSize == default_fontSize) {
                 configuration.fontScale = small_fontSize;
                 try {
                     ActivityManagerNative.getDefault().updatePersistentConfiguration(configuration);
-                    return "�Ѿ�Ϊ����Ϊ��С���壡";
+                    return "已经为您调为最小字体！";
                 } catch (RemoteException e) {
                     e.printStackTrace();
-                    return "�������ʧ�ܣ�";
+                    return "字体调节失败！";
                 }
             } else if (newFontSize == bigger_fontSize) {
                 configuration.fontScale = default_fontSize;
                 try {
                     ActivityManagerNative.getDefault().updatePersistentConfiguration(configuration);
-                    return "�Ѿ�Ϊ����ΪĬ�����壡";
+                    return "已经为您调为默认字体！";
                 } catch (RemoteException e) {
                     e.printStackTrace();
-                    return "�������ʧ�ܣ�";
+                    return "字体调节失败！";
                 }
             } else if(newFontSize == biggest_fontSize){
                 configuration.fontScale = bigger_fontSize;
                 try {
                     ActivityManagerNative.getDefault().updatePersistentConfiguration(configuration);
-                    return "�Ѿ�Ϊ����Ϊ�������壡";
+                    return "已经为您调为更大字体！";
                 } catch (RemoteException e) {
                     e.printStackTrace();
-                    return "�������ʧ�ܣ�";
+                    return "字体调节失败！";
                 }
             } else {
-                return "δʶ��ǰ�����С��";
+                return "未识别当前字体大小！";
             }
         }else{
             return null;
@@ -944,28 +934,28 @@ public class LocalParseAdapter{
     }
 
     /**
-     * ����WIFI����
+     * 处理WIFI技能
      */
     private String handleWifiAction(String wifi,String open, String close){
         if(isTextExist(open)){
             if(FunctionUtil.isWifiEnabled(mContext)){
-                return "��ǰ"+wifi+"�Ѿ��򿪣�";
+                return "当前"+wifi+"已经打开！";
             }else{
                 if(FunctionUtil.setWifiEnable(mContext,true)){
-                    return "����Ϊ����"+wifi+"��";
+                    return "正在为您打开"+wifi+"！";
                 }else{
-                    return wifi+"��ʧ�ܣ�";
+                    return wifi+"打开失败！";
                 }
             }
         }else if(isTextExist(close)){
             if(FunctionUtil.isWifiEnabled(mContext)){
                 if(FunctionUtil.setWifiEnable(mContext,false)){
-                    return "����Ϊ���ر�"+wifi+"!";
+                    return "正在为您关闭"+wifi+"!";
                 }else{
-                    return wifi+"�ر�ʧ�ܣ�";
+                    return wifi+"关闭失败！";
                 }
             }else{
-                return "��ǰ"+wifi+"�Ѿ��رգ�";
+                return "当前"+wifi+"已经关闭！";
             }
         }else{
             return null;
@@ -973,57 +963,57 @@ public class LocalParseAdapter{
     }
 
     /**
-     * ����������������
+     * 处理数据流量技能
      */
     private String handleDataAction(String data,String open, String close){
         Log.d(TAG,"handleDataAction--->isDataEnabled = "+FunctionUtil.getDataEnabled(mContext));
         if(FunctionUtil.hasSimCard(mContext)){
             if(isTextExist(open)){
                 if(FunctionUtil.getDataEnabled(mContext)){
-                    return "��ǰ"+data+"�Ѿ��򿪣�";
+                    return "当前"+data+"已经打开！";
                 }else{
                     FunctionUtil.setDataEnabled(mContext,true);
-                    return "����Ϊ����"+data+"!";
+                    return "正在为您打开"+data+"!";
                 }
             }else if(isTextExist(close)){
                 if(FunctionUtil.getDataEnabled(mContext)){
                     FunctionUtil.setDataEnabled(mContext,false);
-                    return "����Ϊ���ر�"+data+"!";
+                    return "正在为您关闭"+data+"!";
                 }else{
-                    return "��ǰ"+data+"�Ѿ��رգ�";
+                    return "当前"+data+"已经关闭！";
                 }
             }else{
                 return null;
             }
         }else{
-            return "��ǰδ��⵽SIM������ȷ���Ƿ���ȷ������SIM����";
+            return "当前未检测到SIM卡，请确认是否正确插入了SIM卡！";
         }
     }
 
     /**
-     * ����GPS����
+     * 处理GPS技能
      */
     private String handleGpsAction(String gps,String open, String close){
         Log.d(TAG,"handleGpsAction---->isGPSEnabled = "+FunctionUtil.isLocationEnabled(mContext));
         if(isTextExist(open)){
             if(FunctionUtil.isLocationEnabled(mContext)){
-                return "��ǰ"+gps+"�Ѿ��򿪣�";
+                return "当前"+gps+"已经打开！";
             }else{
                 if(FunctionUtil.setLocationEnabled(mContext,true)){
-                    return "����Ϊ����"+gps+"!";
+                    return "正在为您打开"+gps+"!";
                 }else{
-                    return gps+"��ʧ�ܣ�";
+                    return gps+"打开失败！";
                 }
             }
         }else if(isTextExist(close)){
             if(FunctionUtil.isLocationEnabled(mContext)){
                 if(FunctionUtil.setLocationEnabled(mContext,false)){
-                    return "����Ϊ���ر�"+gps+"!";
+                    return "正在为您关闭"+gps+"!";
                 }else{
-                    return gps+"�ر�ʧ�ܣ�";
+                    return gps+"关闭失败！";
                 }
             }else{
-                return "��ǰ"+gps+"�Ѿ��رգ�";
+                return "当前"+gps+"已经关闭！";
             }
         }else{
             return null;
@@ -1031,29 +1021,29 @@ public class LocalParseAdapter{
     }
 
     /**
-     * ������������
+     * 处理蓝牙技能
      */
     private String handleBtAction(String open, String close){
         Log.d(TAG,"handleBtAction---->isBtEnabled = "+FunctionUtil.isBluetoothEnabled());
         if(isTextExist(open)){
             if(FunctionUtil.isBluetoothEnabled()){
-                return "��ǰ�����Ѵ򿪣�";
+                return "当前蓝牙已打开！";
             }else{
                 if(FunctionUtil.setBluetoothEnabled(true)){
-                    return "����Ϊ����������";
+                    return "正在为您打开蓝牙！";
                 }else{
-                    return "������ʧ�ܣ�";
+                    return "蓝牙打开失败！";
                 }
             }
         }else if(isTextExist(close)){
             if(FunctionUtil.isBluetoothEnabled()){
                 if(FunctionUtil.setBluetoothEnabled(false)){
-                    return "����Ϊ���ر�������";
+                    return "正在为您关闭蓝牙！";
                 }else{
-                    return "�����ر�ʧ�ܣ�";
+                    return "蓝牙关闭失败！";
                 }
             }else{
-                return "��ǰ�����ѹرգ�";
+                return "当前蓝牙已关闭！";
             }
         }else{
             return null;
@@ -1061,57 +1051,57 @@ public class LocalParseAdapter{
     }
 
     /**
-     * �����ֵ�Ͳ����
+     * 处理手电筒技能
      */
     private String handleTorchAction(String open, String close){
         Log.d(TAG,"[LocalParseAdapter][handleTorchAction]torchState = "+FunctionUtil.getTorchState(mContext));
         if(FunctionUtil.isHasFlashLight(mCameraManager)){
             if(isTextExist(open)){
                 if(FunctionUtil.getTorchState(mContext) == 0){
-                    return "��ǰ�ֵ�Ͳ�Ѿ��򿪣�";
+                    return "当前手电筒已经打开！";
                 }else{
                     if(FunctionUtil.handelFlashLight(mContext,mCameraManager,true)){
-                        return "����Ϊ�����ֵ�Ͳ��";
+                        return "正在为您打开手电筒！";
                     }else{
-                        return "�ֵ�Ͳ��ʧ�ܣ������³��ԣ�";
+                        return "手电筒打开失败，请重新尝试！";
                     }
                 }
             }else if(isTextExist(close)){
                 if(FunctionUtil.getTorchState(mContext) == 1){
-                    return "��ǰ�ֵ�Ͳ�Ѿ��رգ�";
+                    return "当前手电筒已经关闭！";
                 }else {
                     if(FunctionUtil.handelFlashLight(mContext,mCameraManager,false)){
-                        return "����Ϊ���ر��ֵ�Ͳ��";
+                        return "正在为您关闭手电筒！";
                     }else{
-                        return "�ֵ�Ͳ�ر�ʧ�ܣ������³��ԣ�";
+                        return "手电筒关闭失败，请重新尝试！";
                     }
                 }
             }else{
                 return null;
             }
         }else{
-            return "�Բ���δ�������ֻ��м�⵽��ص��豸��";
+            return "对不起，未在您的手机中检测到相关的设备！";
         }
     }
 
     /**
-     * ������Ƭ��صļ��ܣ���������Ƭ�Ͳ鿴��Ƭ
+     * 处理照片相关的技能，包括拍照片和查看照片
      */
     private String handlePhotoAction(String takePhoto,String viewPhoto){
         Log.d(TAG,"[LocalParseAdapter][handlePhotoAction]takePhoto = "+takePhoto+",viewPhoto = "+viewPhoto);
         if(isTextExist(takePhoto)){
             ComponentName componentName = new ComponentName("com.mediatek.camera","com.mediatek.camera.CameraLauncher");
             if(openApp(componentName)){
-                return "����Ϊ���������";
+                return "正在为您打开相机！";
             }else{
-                return "û��Ϊ���ҵ������ص�Ӧ�ã�";
+                return "没有为您找到相机相关的应用！";
             }
         }else if(isTextExist(viewPhoto)){
             ComponentName componentName = new ComponentName("com.android.gallery3d","com.android.gallery3d.app.GalleryActivity");
             if(openApp(componentName)){
-                return "����Ϊ������ᣡ";
+                return "正在为您打开相册！";
             }else{
-                return "û��Ϊ���ҵ������ص�Ӧ�ã�";
+                return "没有为您找到相册相关的应用！";
             }
         }else{
             return null;

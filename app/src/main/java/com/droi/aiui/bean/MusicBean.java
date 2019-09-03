@@ -13,7 +13,7 @@ public class MusicBean extends BaseBean {
      * intentType : custom
      * vendor : CAPPU
      * version : 4.0
-     * semantic : [{"entrypoint":"ent","intent":"search_by_artist","score":0.906556248664856,"slots":[{"begin":3,"end":6,"name":"singer","normValue":"���»�","value":"���»�"},{"begin":7,"end":9,"name":"song","normValue":"����","value":"����"}],"template":"��һ��{singer}��{song}"}]
+     * semantic : [{"entrypoint":"ent","intent":"search_by_artist","score":0.906556248664856,"slots":[{"begin":3,"end":6,"name":"singer","normValue":"刘德华","value":"刘德华"},{"begin":7,"end":9,"name":"song","normValue":"冰雨","value":"冰雨"}],"template":"来一首{singer}的{song}"}]
      * state : null
      */
 
@@ -77,8 +77,8 @@ public class MusicBean extends BaseBean {
          * entrypoint : ent
          * intent : search_by_artist
          * score : 0.906556248664856
-         * slots : [{"begin":3,"end":6,"name":"singer","normValue":"���»�","value":"���»�"},{"begin":7,"end":9,"name":"song","normValue":"����","value":"����"}]
-         * template : ��һ��{singer}��{song}
+         * slots : [{"begin":3,"end":6,"name":"singer","normValue":"刘德华","value":"刘德华"},{"begin":7,"end":9,"name":"song","normValue":"冰雨","value":"冰雨"}]
+         * template : 来一首{singer}的{song}
          */
 
         private String entrypoint;
@@ -132,8 +132,8 @@ public class MusicBean extends BaseBean {
              * begin : 3
              * end : 6
              * name : singer
-             * normValue : ���»�
-             * value : ���»�
+             * normValue : 刘德华
+             * value : 刘德华
              */
 
             private int begin;

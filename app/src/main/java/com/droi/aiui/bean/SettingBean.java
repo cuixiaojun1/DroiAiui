@@ -11,12 +11,12 @@ public class SettingBean extends BaseBean {
     /**
      * category : CAPPU.system_settings
      * intentType : custom
-     * query : ������Ļ����
-     * query_ws : ����/VO// ��Ļ/NN// ����/NN//
+     * query : 增加屏幕亮度
+     * query_ws : 增加/VO// 屏幕/NN// 亮度/NN//
      * nlis : true
      * vendor : CAPPU
      * version : 2.0
-     * semantic : [{"entrypoint":"ent","intent":"setting_intent","score":1,"slots":[{"begin":0,"end":2,"name":"operation","normValue":"����","va;;lue":"����"},{"begin":2,"end":6,"name":"type","normValue":"����","value":"��Ļ����"}]}]
+     * semantic : [{"entrypoint":"ent","intent":"setting_intent","score":1,"slots":[{"begin":0,"end":2,"name":"operation","normValue":"增大","va;;lue":"增加"},{"begin":2,"end":6,"name":"type","normValue":"亮度","value":"屏幕亮度"}]}]
      * state : null
      */
 
@@ -35,7 +35,7 @@ public class SettingBean extends BaseBean {
          * entrypoint : ent
          * intent : setting_intent
          * score : 1
-         * slots : [{"begin":0,"end":2,"name":"operation","normValue":"����","va;;lue":"����"},{"begin":2,"end":6,"name":"type","normValue":"����","value":"��Ļ����"}]
+         * slots : [{"begin":0,"end":2,"name":"operation","normValue":"增大","va;;lue":"增加"},{"begin":2,"end":6,"name":"type","normValue":"亮度","value":"屏幕亮度"}]
          */
 
         private String intent;
@@ -62,9 +62,9 @@ public class SettingBean extends BaseBean {
              * begin : 0
              * end : 2
              * name : operation
-             * normValue : ����
-             * va;;lue : ����
-             * value : ��Ļ����
+             * normValue : 增大
+             * va;;lue : 增加
+             * value : 屏幕亮度
              */
 
             private String name;

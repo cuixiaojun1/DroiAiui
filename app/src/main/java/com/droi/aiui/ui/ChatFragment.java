@@ -5,6 +5,7 @@ import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -18,15 +19,16 @@ import com.droi.aiui.controler.SpeechControler;
 
 import java.util.ArrayList;
 
+
 /**
  * Created by cuixiaojun on 17-12-28.
- * ����������
+ * 聊天主界面
  */
-public class ChatFragment extends BaseFragment implements IOnParseListener {
+public class ChatFragment extends BaseFragment implements IOnParseListener{
 
     private final String TAG = "ChatFragment";
     private DroiAiuiMainActivity mActivity;
-    //��Ϣ�б�
+    //消息列表
     private ArrayList<Message> arrayListChat=new ArrayList<Message>();
     private ListView mListView;
     private LinearLayout mMessagePoint;
@@ -49,6 +51,7 @@ public class ChatFragment extends BaseFragment implements IOnParseListener {
 
     @Override
     public void initView() {
+        Log.d(TAG,"initView");
         mActivity.setOnParseListener(this);
         mListView = (ListView) view.findViewById(R.id.listview_chat);
         mMessagePoint = (LinearLayout) view.findViewById(R.id.message_point);
@@ -66,6 +69,7 @@ public class ChatFragment extends BaseFragment implements IOnParseListener {
 
     @Override
     public void initData() {
+        Log.d(TAG,"initData");
         mActivity = (DroiAiuiMainActivity) getActivity();
         mSpeechControler = mActivity.mAiuiManager.getSpeechControler();
     }
@@ -77,7 +81,7 @@ public class ChatFragment extends BaseFragment implements IOnParseListener {
             new Handler().postDelayed(new Runnable(){
                 @Override
                 public void run() {
-                    String speech = "����,���ã�����С�����飬��ʲô���԰��������أ�";
+                    String speech = "主人,您好，我是小布精灵，有什么可以帮助您的呢？";
                     if(mSpeechControler != null){
                         mSpeechControler.setSpeechContent(speech);
                         mSpeechControler.startSpeechByType("ChatFragment");
@@ -88,17 +92,18 @@ public class ChatFragment extends BaseFragment implements IOnParseListener {
     }
 
     /**
-     * ��ȡ��Ϣ����
+     * 获取消息数据
      * @param messages
      */
     public void getData(ArrayList<Message> messages) {
+        Log.d(TAG,"getData--->messages.size = "+messages.size());
         for(int i=0;i<messages.size();i++){
             Message message = new Message();
             message.fromType = messages.get(i).fromType;
             message.msgType = messages.get(i).msgType;
-            //�ж���Ϣ�����Ի����ˣ�ֻ�ʶ�������˵�Ļ�
+            //判断消息是来自机器人，只朗读机器人说的话
             if(messages.get(i).fromType.equals(Message.FromType.ROBOT)){
-                //��ʼ�ʶ���Ϣ
+                //开始朗读消息
                 String speech = messages.get(i).getText();
                 mSpeechControler.setSpeechContent(speech);
                 if(!mSpeechControler.isSpeaking()){
@@ -112,12 +117,12 @@ public class ChatFragment extends BaseFragment implements IOnParseListener {
     }
 
     /**
-     * Ϊ��������������Դ�ĸı�
+     * 为适配器设置数据源的改变
      */
     private DataSetObserver mDataSetObserver = new DataSetObserver() {
         @Override
         public void onChanged() {
-            //���Ự��Ϣ�����ƶ�
+            //将会话消息向下移动
             mListView.smoothScrollToPosition(arrayListChat.size());
         }
     };
@@ -130,7 +135,7 @@ public class ChatFragment extends BaseFragment implements IOnParseListener {
                 if(messages.size() != 0){
                     mMessagePoint.setVisibility(View.GONE);
                     mListView.setVisibility(View.VISIBLE);
-                    //ÿ���յ���Ϣ֮����Ҫˢ������
+                    //每次收到消息之后都需要刷新数据
                     mAdapter.notifyDataSetChanged();
                 }
                 getData(messages);

@@ -2,6 +2,7 @@ package com.droi.aiui.widget;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,9 +36,11 @@ public class DialogRemindInfo extends Dialog implements View.OnClickListener{
 
         findView(context);
         setCanceledOnTouchOutside(false);
+        //出现时外部变暗
         WindowManager.LayoutParams attributes = getWindow().getAttributes();
         attributes.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
         attributes.dimAmount = 0.5f;
+        // 设置位置
         attributes.width = ViewGroup.LayoutParams.WRAP_CONTENT;
         attributes.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         attributes.gravity = Gravity.CENTER;
@@ -45,7 +48,7 @@ public class DialogRemindInfo extends Dialog implements View.OnClickListener{
     }
 
     /**
-     * ��ʼ����ͼ
+     * 初始化视图
      * @param context
      */
     private void findView(Context context) {
@@ -62,7 +65,7 @@ public class DialogRemindInfo extends Dialog implements View.OnClickListener{
     }
 
     /**
-     * ���õ�ǰ��remindinfo
+     * 设置当前的remindinfo
      */
     public void showCurrentRemindInfo(RemindInfo remindInfo){
         mRemindInfo = remindInfo;
@@ -75,6 +78,7 @@ public class DialogRemindInfo extends Dialog implements View.OnClickListener{
             week.setText(remindDataTime.getWeek());
             time.setText(remindDataTime.getTime());
         }
+        Log.d(TAG,"DialogRemindInfo--->remindInfo===="+mRemindInfo.toString()+",remindDataTime = "+remindDataTime.toString());
         show();
     }
 

@@ -28,6 +28,7 @@ import android.os.UserManager;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import com.droi.aiui.R;
 import com.droi.aiui.bean.AppInfo;
@@ -47,7 +48,7 @@ import java.util.regex.Pattern;
 
 /**
  * Created by cuixiaojun on 17-12-6.
- * �����Ժ�����չ��
+ * 功能性函数扩展类
  */
 
 public class FunctionUtil {
@@ -79,13 +80,13 @@ public class FunctionUtil {
     public static final int NETWORK_CLASS_4_G = 4;
 
     /**
-     * ��ʽ��ʱ���ʽ
+     * 格式化时间格式
      */
     public static final String TIME_FORMATE = "yyyy-MM-dd HH:mm:ss";
-    public static final String TIME_FORMATE1 = "yyyy��MM��dd�� HHʱmm��ss��";
+    public static final String TIME_FORMATE1 = "yyyy年MM月dd日 HH时mm分ss秒";
 
     /**
-     * �������������ļ�
+     * 智能语音本地文件
      */
     public static final String AIUI_SETTINGS = "aiui_settings";
 
@@ -95,7 +96,7 @@ public class FunctionUtil {
     private static ContentResolver contentResolver;
 
     /**
-     * ��ȡassetĿ¼���ļ���
+     * 读取asset目录下文件。
      *
      * @return content
      */
@@ -117,7 +118,7 @@ public class FunctionUtil {
     }
 
     /**
-     * ��ȡassetĿ¼���ļ���
+     * 读取asset目录下文件。
      */
     public static byte[] readFile(Context ctx, String file) {
         int len = 0;
@@ -144,23 +145,23 @@ public class FunctionUtil {
 
     /**
      *
-     * @param currentTime Ҫת����long���͵�ʱ��
-     * @param formatType Ҫת����ʱ���ʽyyyy-MM-dd HH:mm:ss//yyyy��MM��dd�� HHʱmm��ss��
+     * @param currentTime 要转换的long类型的时间
+     * @param formatType 要转换的时间格式yyyy-MM-dd HH:mm:ss//yyyy年MM月dd日 HH时mm分ss秒
      * @return
      * @throws ParseException
      */
     public static Date longToDate(long currentTime, String formatType)
             throws ParseException {
-        Date dateOld = new Date(currentTime); // ����long���͵ĺ���������һ��date���͵�ʱ��
-        String sDateTime = dateToString(dateOld, formatType); // ��date���͵�ʱ��ת��Ϊstring
-        Date date = stringToDate(sDateTime, formatType); // ��String����ת��ΪDate����
+        Date dateOld = new Date(currentTime); // 根据long类型的毫秒数生命一个date类型的时间
+        String sDateTime = dateToString(dateOld, formatType); // 把date类型的时间转换为string
+        Date date = stringToDate(sDateTime, formatType); // 把String类型转换为Date类型
         return date;
     }
 
     /**
      *
-     * @param data Date���͵�ʱ��
-     * @param formatType ��ʽΪyyyy-MM-dd HH:mm:ss//yyyy��MM��dd�� HHʱmm��ss��
+     * @param data Date类型的时间
+     * @param formatType 格式为yyyy-MM-dd HH:mm:ss//yyyy年MM月dd日 HH时mm分ss秒
      * @return
      */
     public static String dateToString(Date data, String formatType) {
@@ -169,25 +170,25 @@ public class FunctionUtil {
 
     /**
      *
-     * @param currentTime Ҫת����long���͵�ʱ��
-     * @param formatType Ҫת����string���͵�ʱ���ʽ
+     * @param currentTime 要转换的long类型的时间
+     * @param formatType 要转换的string类型的时间格式
      * @return
      */
     public static String longToString(long currentTime, String formatType) {
-        Date date = null; // long����ת��Date����
+        Date date = null; // long类型转成Date类型
         try {
             date = longToDate(currentTime, formatType);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        String strTime = dateToString(date, formatType); // date����ת��String
+        String strTime = dateToString(date, formatType); // date类型转成String
         return strTime;
     }
 
     /**
      *
-     * @param strTime Ҫת����string���͵�ʱ�䣬formatTypeҪת���ĸ�ʽyyyy-MM-dd HH:mm:ss//yyyy��MM��dd�� HHʱmm��ss�룬
-     * @param formatType strTime��ʱ���ʽ����Ҫ��formatType��ʱ���ʽ��ͬ
+     * @param strTime 要转换的string类型的时间，formatType要转换的格式yyyy-MM-dd HH:mm:ss//yyyy年MM月dd日 HH时mm分ss秒，
+     * @param formatType strTime的时间格式必须要与formatType的时间格式相同
      * @return
      */
     public static Date stringToDate(String strTime, String formatType) {
@@ -203,8 +204,8 @@ public class FunctionUtil {
 
     /**
      *
-     * @param strTime Ҫת����String���͵�ʱ��
-     * @param formatType strTime��ʱ���ʽ��formatType��ʱ���ʽ������ͬ
+     * @param strTime 要转换的String类型的时间
+     * @param formatType strTime的时间格式和formatType的时间格式必须相同
      * @return
      */
     public static long stringToLong(String strTime, String formatType) {
@@ -212,27 +213,27 @@ public class FunctionUtil {
         if (date == null) {
             return 0;
         } else {
-            //date����ת��long����
+            //date类型转成long类型
             return dateToLong(date);
         }
     }
 
     /**
-     * dateҪת����date���͵�ʱ��
+     * date要转换的date类型的时间
       */
     public static long dateToLong(Date date) {
         return date.getTime();
     }
 
     /**
-     * ͨ��longʱ���ȡ��Ӧ��������
+     * 通过long时间获取对应的年月日
      */
     public static RemindDataTime getRemindDateTime(long longTime) {
         RemindDataTime remindDataTime = new RemindDataTime();
         try {
             Date date = new Date(longTime);
-            SimpleDateFormat formatYear = new SimpleDateFormat("yyyy��");
-            SimpleDateFormat formatDay = new SimpleDateFormat("MM��dd��");
+            SimpleDateFormat formatYear = new SimpleDateFormat("yyyy年");
+            SimpleDateFormat formatDay = new SimpleDateFormat("MM月dd日");
             SimpleDateFormat formatTime = new SimpleDateFormat("HH:mm");
             SimpleDateFormat formatWeek = new SimpleDateFormat("EEEE");
             SimpleDateFormat formatAmPm = new SimpleDateFormat("a");
@@ -255,10 +256,10 @@ public class FunctionUtil {
     }
 
     /**
-     * ��⵱ǰ�����磨WLAN��3G/2G��״̬
+     * 检测当前的网络（WLAN、3G/2G）状态
      *
      * @param context Context
-     * @return true ��ʾ�������
+     * @return true 表示网络可用
      */
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivity = null;
@@ -268,9 +269,9 @@ public class FunctionUtil {
         if (connectivity != null) {
             NetworkInfo info = connectivity.getActiveNetworkInfo();
             if (info != null && info.isConnected()) {
-                // ��ǰ���������ӵ�
+                // 当前网络是连接的
                 if (info.getState() == NetworkInfo.State.CONNECTED) {
-                    // ��ǰ�����ӵ��������
+                    // 当前所连接的网络可用
                     return true;
                 }
             }
@@ -279,7 +280,7 @@ public class FunctionUtil {
     }
 
     /**
-     * ���wifi�Ƿ񴦿�����״̬
+     * 检查wifi是否处开连接状态
      *
      * @return
      */
@@ -290,14 +291,14 @@ public class FunctionUtil {
     }
 
     /**
-     * ���wifiǿ���Ƿ����
+     * 检查wifi强弱是否可用
      */
     public static boolean isWifiEnable(Context context) {
         if (isWifiConnect(context)) {
             WifiManager mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
             WifiInfo mWifiInfo = mWifiManager.getConnectionInfo();
-            int wifi = mWifiInfo.getRssi();//��ȡwifi�ź�ǿ��
-            if (wifi > -80 && wifi < 0) {//�źűȽ�ǿ
+            int wifi = mWifiInfo.getRssi();//获取wifi信号强度
+            if (wifi > -80 && wifi < 0) {//信号比较强
                 return true;
             }
         }
@@ -305,7 +306,7 @@ public class FunctionUtil {
     }
 
     /**
-     * ��ȡ��ǰ�������������
+     * 获取当前网络的连接类型
      *
      * @param context
      * @return
@@ -358,8 +359,8 @@ public class FunctionUtil {
     }
 
     /**
-     * ��������
-     * �ж��ֻ����Ƿ�װ��ĳ��Ӧ��
+     * 给定包名
+     * 判断手机中是否安装了某个应用
      */
     public static boolean checkApkInstall(Context context, String packageName) {
         try {
@@ -375,7 +376,7 @@ public class FunctionUtil {
     }
 
     /**
-     * ����app
+     * 启动app
      *
      * @param componentName
      * @param context
@@ -390,6 +391,7 @@ public class FunctionUtil {
             intent.setComponent(componentName);
             context.startActivity(intent);
         } catch (Exception e) {
+            Log.d(TAG, "应用打开失败！");
             e.printStackTrace();
             return false;
         }
@@ -397,9 +399,9 @@ public class FunctionUtil {
     }
 
     /**
-     * �ж��Ƿ����SIM��
+     * 判断是否包含SIM卡
      *
-     * @return ״̬
+     * @return 状态
      */
     public static boolean hasSimCard(Context context) {
         TelephonyManager telMgr = (TelephonyManager)
@@ -408,17 +410,18 @@ public class FunctionUtil {
         boolean result = true;
         switch (simState) {
             case TelephonyManager.SIM_STATE_ABSENT:
-                result = false; // û��SIM��
+                result = false; // 没有SIM卡
                 break;
             case TelephonyManager.SIM_STATE_UNKNOWN:
                 result = false;
                 break;
         }
+        Log.d(TAG, result ? "有SIM卡" : "无SIM卡");
         return result;
     }
 
     /**
-     * ͨ��Ӧ�����ƻ�ȡӦ�õİ���������
+     * 通过应用名称获取应用的包名的类名
      *
      * @param allApps
      * @param appName
@@ -438,7 +441,7 @@ public class FunctionUtil {
     }
 
     /**
-     * �жϵ�ǰwifi�Ƿ��
+     * 判断当前wifi是否打开
      */
     public static boolean isWifiEnabled(Context context) {
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
@@ -446,20 +449,20 @@ public class FunctionUtil {
     }
 
     /**
-     * �򿪺͹ر�wifi
+     * 打开和关闭wifi
      *
      * @param context
      * @param state
      */
     public static boolean setWifiEnable(Context context, boolean state) {
-        //���ȣ���Contextͨ��getSystemService��ȡwifimanager
+        //首先，用Context通过getSystemService获取wifimanager
         WifiManager mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        //����WifiManager��setWifiEnabled��������wifi�Ĵ򿪻��߹رգ�ֻ��������state��Ϊ����ֵ���ɣ�true:�� false:�رգ�
+        //调用WifiManager的setWifiEnabled方法设置wifi的打开或者关闭，只需把下面的state改为布尔值即可（true:打开 false:关闭）
         return mWifiManager.setWifiEnabled(state);
     }
 
     /**
-     * �жϵ�ǰ�����Ƿ��
+     * 判断当前蓝牙是否打开
      */
     public static boolean isBluetoothEnabled() {
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -471,7 +474,7 @@ public class FunctionUtil {
     }
 
     /**
-     * �жϵ�ǰ�����Ƿ��
+     * 判断当前蓝牙是否打开
      */
     public static boolean setBluetoothEnabled(boolean state) {
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -483,7 +486,7 @@ public class FunctionUtil {
     }
 
     /**
-     * ����õ����ؽ��
+     * 随机得到返回结果
      */
     public static String getAnswer(Context context) {
         Random random = new Random();
@@ -505,11 +508,12 @@ public class FunctionUtil {
                 R.string.default_answer14
         };
         int resId = random.nextInt(answer.length);
+        Log.d(TAG, "getAnswer--->resId = " + resId);
         return context.getResources().getString(answer[resId]);
     }
 
     /**
-     * �жϵ�ǰ��Ļ�Ƿ����
+     * 判断当前屏幕是否解锁
      */
     public static boolean isScreenLocked(Context context) {
         KeyguardManager mKeyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
@@ -517,12 +521,13 @@ public class FunctionUtil {
     }
 
     /**
-     * ��������֪ͨ
+     * 发送提醒通知
      *
      * @param
      */
     public static void sendNotification(Context context, RemindInfo remindInfo) {
-        //��ȡNotificationManagerʵ��
+        Log.d(TAG, "发送通知=--->id = " + Integer.parseInt(String.valueOf(remindInfo.getId())) + ",remindInfo = " + remindInfo);
+        //获取NotificationManager实例
         NotificationManager notifyManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         String time = FunctionUtil.getRemindDateTime(remindInfo.getTime()).getTime();
         Intent mainIntent = new Intent(context, RemindActivity.class);
@@ -530,10 +535,10 @@ public class FunctionUtil {
         bundle.putSerializable(FunctionUtil.KEY_REMINDINFO,remindInfo);
         mainIntent.putExtra(FunctionUtil.KEY_REMINDINFO_DATA, bundle);
         PendingIntent mainPendingIntent = PendingIntent.getActivity(context, 0, mainIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        //ʵ����NotificationCompat.Builde�������������
+        //实例化NotificationCompat.Builde并设置相关属性
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         Notification notification = builder.setContentText(remindInfo.getContent() + "\n" + time)
-                .setContentTitle("����")
+                .setContentTitle("提醒")
                 .setSmallIcon(R.mipmap.cappu_remind)
                 .setWhen(System.currentTimeMillis())
                 .setAutoCancel(false)
@@ -544,14 +549,15 @@ public class FunctionUtil {
         notifyManager.notify(0, notification);
     }
 
-    //ȡ����Ӧ������֪ͨ
+    //取消对应的提醒通知
     public static void cancelNotification(Context context, RemindInfo remindInfo) {
         NotificationManager notifyManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        Log.d(TAG, "取消通知---->id = " + Integer.parseInt(String.valueOf(remindInfo.getId())));
         //notifyManager.cancel(Integer.parseInt(String.valueOf(remindInfo.getId())));
         notifyManager.cancel(0);
     }
 
-    // ���ε����ť֮��ĵ�������������1000����
+    // 两次点击按钮之间的点击间隔不能少于1000毫秒
     private static final int MIN_CLICK_DELAY_TIME = 600;
     private static long lastClickTime;
 
@@ -566,21 +572,21 @@ public class FunctionUtil {
     }
 
     /**
-     * �����ֵ�Ͳ
+     * 操作手电筒
      */
     public static boolean handelFlashLight(Context context,CameraManager cameraManager, boolean open) {
         try {
-            //��ȡCameraManager
-            //��ȡ��ǰ�ֻ���������ͷ�豸ID
+            //获取CameraManager
+            //获取当前手机所有摄像头设备ID
             String[] ids = cameraManager.getCameraIdList();
             for (String id : ids) {
                 CameraCharacteristics c = cameraManager.getCameraCharacteristics(id);
-                //��ѯ������ͷ����Ƿ���������
+                //查询该摄像头组件是否包含闪光灯
                 Boolean flashAvailable = c.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
                 Integer lensFacing = c.get(CameraCharacteristics.LENS_FACING);
                 if (flashAvailable != null && flashAvailable
                         && lensFacing != null && lensFacing == CameraCharacteristics.LENS_FACING_BACK) {
-                    //�򿪻�ر��ֵ�Ͳ
+                    //打开或关闭手电筒
                     cameraManager.setTorchMode(id, open);
                     setTorchState(context,open);
                     return true;
@@ -594,17 +600,17 @@ public class FunctionUtil {
     }
 
     /**
-     * �Ƿ�����ֵ�Ͳ
+     * 是否包含手电筒
      *
      * @return
      */
     public static boolean isHasFlashLight(CameraManager cameraManager) {
         try {
-            //��ȡ��ǰ�ֻ���������ͷ�豸ID
+            //获取当前手机所有摄像头设备ID
             String[] ids = cameraManager.getCameraIdList();
             for (String id : ids) {
                 CameraCharacteristics c = cameraManager.getCameraCharacteristics(id);
-                //��ѯ������ͷ����Ƿ���������
+                //查询该摄像头组件是否包含闪光灯
                 Boolean flashAvailable = c.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
                 if (flashAvailable != null && flashAvailable) {
                     return true;
@@ -618,20 +624,21 @@ public class FunctionUtil {
     }
 
     /**
-     * �����ֵ�Ͳ��״̬
+     * 设置手电筒的状态
      *
      * @param isTorchOpen
      */
     private static void setTorchState(Context context,boolean isTorchOpen) {
+        Log.d(TAG,"[setTorchState]isTorchOpen = "+isTorchOpen);
         if(isTorchOpen){
-            Settings.Secure.putInt(context.getContentResolver(),"flashlight.state",0);//�ֵ�Ͳ��
+            Settings.Secure.putInt(context.getContentResolver(),"flashlight.state",0);//手电筒打开
         }else{
-            Settings.Secure.putInt(context.getContentResolver(),"flashlight.state",1);//�ֵ�Ͳ�ر�
+            Settings.Secure.putInt(context.getContentResolver(),"flashlight.state",1);//手电筒关闭
         }
     }
 
     /**
-     * ���ֵ�Ͳ��״̬
+     * 获手电筒的状态
      *
      * @return
      */
@@ -647,7 +654,7 @@ public class FunctionUtil {
 
 
     /**
-     * �򿪺͹ر�GPS
+     * 打开和关闭GPS
      */
     public static boolean setLocationEnabled(Context context, boolean enabled) {
         int currentUserId = ActivityManager.getCurrentUser();
@@ -662,7 +669,7 @@ public class FunctionUtil {
     }
 
     /**
-     * �жϵ�ǰGPS�Ƿ��
+     * 判断当前GPS是否打开
      */
     public static boolean isLocationEnabled(Context context) {
         ContentResolver resolver = context.getContentResolver();
@@ -680,7 +687,7 @@ public class FunctionUtil {
     }
 
     /**
-     * �򿪺͹ر���������
+     * 打开和关闭数据流量
      */
     public static void setDataEnabled(Context context, boolean enable) {
         TelephonyManager mTelephonyManager = (TelephonyManager) context.getSystemService(context.TELEPHONY_SERVICE);
@@ -688,7 +695,7 @@ public class FunctionUtil {
     }
 
     /**
-     * ��ȡ��ǰ��������״̬
+     * 获取当前数据流量状态
      */
     public static boolean getDataEnabled(Context context) {
         TelephonyManager mTelephonyManager = (TelephonyManager) context.getSystemService(context.TELEPHONY_SERVICE);
@@ -696,7 +703,7 @@ public class FunctionUtil {
     }
 
     /**
-     * ��ǰ����
+     * 当前音量
      * <p>
      * shadow add
      *
@@ -710,7 +717,7 @@ public class FunctionUtil {
 
 
     /**
-     * ��������
+     * 增大音量
      *
      * @param context
      */
@@ -720,7 +727,7 @@ public class FunctionUtil {
     }
 
     /**
-     * ��С����
+     * 减小音量
      *
      * @param context
      */
@@ -730,7 +737,7 @@ public class FunctionUtil {
     }
 
     /**
-     * ��ȡ��ǰ��Ļ����
+     * 获取当前屏幕亮度
      *
      * @param context
      * @return brightValue
@@ -747,7 +754,7 @@ public class FunctionUtil {
     }
 
     /**
-     * ������Ļ����
+     * 增大屏幕亮度
      *
      * @param context
      */
@@ -764,7 +771,7 @@ public class FunctionUtil {
     }
 
     /**
-     * ������Ļ����
+     * 降低屏幕亮度
      *
      * @param context
      */
@@ -781,13 +788,13 @@ public class FunctionUtil {
     }
 
     /**
-     * ����ַ��������ж������ַ�
+     * 清楚字符串中所有额特殊字符
      * @param normalStrng
      * @return
      */
     public static String formateString(String normalStrng){
         if (normalStrng != null && !"".equals(normalStrng.trim())) {
-            String regEx="[\\s~��`!��@#��$%^����&*��()��\\-����\\-_=+��\\[\\]����{}��\\|��\\\\��;��:��'����\"��,��<��.��>��/��?]";
+            String regEx="[\\s~·`!！@#￥$%^……&*（()）\\-——\\-_=+【\\[\\]】｛{}｝\\|、\\\\；;：:‘'“”\"，,《<。.》>、/？?]";
             Pattern p = Pattern.compile(regEx);
             Matcher m = p.matcher(normalStrng);
             return m.replaceAll("");
@@ -796,9 +803,10 @@ public class FunctionUtil {
     }
 
     /**
-     * ��ȡ���ֲ����б�
+     * 获取音乐播放列表
      */
     public static long[] getPlayList(List<Song> allSongs){
+        Log.d(TAG,"[MusicParseAdapter][getPlayList]size = "+allSongs.size());
         long[] list = new long[allSongs.size()];
         for (int i = 0; i < allSongs.size(); i++) {
             list[i] = allSongs.get(i).getId();
@@ -807,9 +815,10 @@ public class FunctionUtil {
     }
 
     /**
-     * ���Ÿ���
-     *//*
-    public static void playMusicByList(IMediaPlaybackService mMusicService,long[] list, int position){
+     * 播放歌曲
+     */
+    /*public static void playMusicByList(IMediaPlaybackService mMusicService,long[] list, int position){
+        CappuLog.d(TAG,"[FunctionUtil][playMusicByList]mMusicService = "+mMusicService+",list.size = "+list+",position = "+position);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -828,9 +837,9 @@ public class FunctionUtil {
     }*/
 
     /**
-     * ���ò���ģʽ
-     *//*
-    public static int getShuffleMode(IMediaPlaybackService mMusicService){
+     * 设置播放模式
+     */
+    /*public static int getShuffleMode(IMediaPlaybackService mMusicService){
         try {
             return mMusicService.getShuffleMode();
         } catch (RemoteException e) {
@@ -840,7 +849,7 @@ public class FunctionUtil {
     }*/
 
     /**
-     * ����ѭ��ģʽ
+     * 设置循环模式
      */
     /*public static void setRepeatMode(IMediaPlaybackService mMusicService, int mode){
         try {
@@ -851,7 +860,7 @@ public class FunctionUtil {
     }*/
 
     /**
-     * ֹͣ���Ÿ���
+     * 停止播放歌曲
      */
     /*public static void stopPlaySong(IMediaPlaybackService mMusicService){
         new Handler().postDelayed(new Runnable() {

@@ -32,11 +32,11 @@ public class MD5Utils {
                 int    result = bis.read(header);
                 bis.reset();
                 int ss = header[0] & 255 | (header[1] & 255) << 8;
-                /*if (result != -1 && ss == '�z') {
+                if (result != -1 && ss == '謟') {
                     is = new GZIPInputStream(bis);
                 } else {
                     is = bis;
-                }*/
+                }
             } else {
                 is = new BufferedInputStream(input);
             }

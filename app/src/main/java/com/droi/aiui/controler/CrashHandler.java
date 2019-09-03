@@ -16,16 +16,16 @@ import java.util.Date;
 
 public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
-    // log�ļ��ĺ�׺��
+    // log文件的后缀名
     public static final String FILE_NAME_SUFFIX = "FATAL.log";
     private Context mContext;
     private static CrashHandler sInstance = null;
 
     private CrashHandler(Context context) {
         Thread.getDefaultUncaughtExceptionHandler();
-        // ����ǰʵ����ΪϵͳĬ�ϵ��쳣������
+        // 将当前实例设为系统默认的异常处理器
         Thread.setDefaultUncaughtExceptionHandler(this);
-        // ��ȡContext�������ڲ�ʹ��
+        // 获取Context，方便内部使用
         this.mContext = context.getApplicationContext();
     }
 
@@ -37,18 +37,18 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     }
 
     /**
-     * �������ؼ��ĺ���������������δ��������쳣��ϵͳ�����Զ�����#uncaughtException����
-     * threadΪ����δ�����쳣���̣߳�exΪδ������쳣���������ex�����ǾͿ��Եõ��쳣��Ϣ��
+     * 这个是最关键的函数，当程序中有未被捕获的异常，系统将会自动调用#uncaughtException方法
+     * thread为出现未捕获异常的线程，ex为未捕获的异常，有了这个ex，我们就可以得到异常信息。
      */
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
-        // �����쳣��Ϣ��SD����
+        // 导出异常信息到SD卡中
         try {
             saveToSDCard(ex);
         } catch (Exception localException) {
 
         } finally {
-            // ex.printStackTrace();// ����ʱ��ӡ��־��Ϣ
+            // ex.printStackTrace();// 调试时打印日志信息
             System.exit(0);
         }
     }
@@ -62,19 +62,19 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         }
         PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(
                 file, append)));
-        // ���������쳣��ʱ��
+        // 导出发生异常的时间
         pw.println(getDataTime("yyyy-MM-dd HH:mm:ss"));
-        // �����ֻ���Ϣ
+        // 导出手机信息
         dumpPhoneInfo(pw);
         pw.println();
-        // �����쳣�ĵ���ջ��Ϣ
+        // 导出异常的调用栈信息
         ex.printStackTrace(pw);
         pw.println();
         pw.close();
     }
 
     private void dumpPhoneInfo(PrintWriter pw) throws PackageManager.NameNotFoundException {
-        // Ӧ�õİ汾���ƺͰ汾��
+        // 应用的版本名称和版本号
         PackageManager pm = mContext.getPackageManager();
         PackageInfo pi = pm.getPackageInfo(mContext.getPackageName(),
                 PackageManager.GET_ACTIVITIES);
@@ -84,24 +84,24 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         pw.println(pi.versionCode);
         pw.println();
 
-        // android�汾��
+        // android版本号
         pw.print("OS Version: ");
         pw.print(Build.VERSION.RELEASE);
         pw.print("_");
         pw.println(Build.VERSION.SDK_INT);
         pw.println();
 
-        // �ֻ�������
+        // 手机制造商
         pw.print("Vendor: ");
         pw.println(Build.MANUFACTURER);
         pw.println();
 
-        // �ֻ��ͺ�
+        // 手机型号
         pw.print("Model: ");
         pw.println(Build.MODEL);
         pw.println();
 
-        // cpu�ܹ�
+        // cpu架构
         pw.print("CPU ABI: ");
         pw.println(Build.CPU_ABI);
         pw.println();
@@ -109,7 +109,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
 
     /**
-     * ָ����ʽ���ص�ǰϵͳʱ��
+     * 指定格式返回当前系统时间
      */
     public static String getDataTime(String format) {
         SimpleDateFormat df = new SimpleDateFormat(format);
@@ -117,9 +117,9 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     }
 
     /**
-     * ��ָ���ļ��л�ȡ�ļ�
+     * 从指定文件夹获取文件
      *
-     * @return ����ļ��������򴴽�, ����޷������ļ����ļ���Ϊ���򷵻�null
+     * @return 如果文件不存在则创建, 如果无法创建文件或文件名为空则返回null
      */
     public static File getSaveFile(String folderPath, String fileNmae) {
         File file = new File(getSavePath(folderPath) + File.separator + fileNmae);
@@ -132,18 +132,18 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     }
 
     /**
-     * ��ȡSD����ָ���ļ��еľ���·��
+     * 获取SD卡下指定文件夹的绝对路径
      *
-     * @return ����SD���µ�ָ���ļ��еľ���·��
+     * @return 返回SD卡下的指定文件夹的绝对路径
      */
     public static String getSavePath(String folderName) {
         return getSaveFolder(folderName).getAbsolutePath();
     }
 
     /**
-     * ��ȡ�ļ��ж���
+     * 获取文件夹对象
      *
-     * @return ����SD���µ�ָ���ļ��ж������ļ��в������򴴽�
+     * @return 返回SD卡下的指定文件夹对象，若文件夹不存在则创建
      */
     public static File getSaveFolder(String folderName) {
         File file = new File(getRootPath() + File.separator + folderName
@@ -153,12 +153,12 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     }
 
     /**
-     * �õ�SD����Ŀ¼.
+     * 得到SD卡根目录.
      */
     public static File getRootPath() {
         File path;
         if (sdCardIsAvailable()) {
-            path = Environment.getExternalStorageDirectory(); // ȡ��sdcard�ļ�·��
+            path = Environment.getExternalStorageDirectory(); // 取得sdcard文件路径
         } else {
             path = Environment.getDataDirectory();
         }
@@ -166,7 +166,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     }
 
     /**
-     * SD���Ƿ����.
+     * SD卡是否可用.
      */
     public static boolean sdCardIsAvailable() {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
